@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth'; // 1. User tipini buraya ekledik
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 
 // Sayfalar
@@ -8,11 +8,10 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import AllProjects from './pages/AllProjects';
+// Contact importunu buradan kaldırdık çünkü Home.tsx içinde kullanacağız.
 
 // --- GÜVENLİK KORUMASI (Guard) ---
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // 2. Burada 'any' yerine 'User | null' kullandık.
-  // Kullanıcı ya 'User' tipindedir ya da henüz giriş yapmamıştır (null).
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +33,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/all-projects" element={<AllProjects />} /> {/* YENİ */}
+      <Route path="/all-projects" element={<AllProjects />} />
+      
+      {/* Admin Rotası */}
       <Route 
         path="/admin" 
         element={

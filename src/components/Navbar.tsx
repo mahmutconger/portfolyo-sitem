@@ -85,13 +85,20 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Logo */}
+         {/* Logo / İsim Kısmı */}
           <div 
-            className="flex-shrink-0 cursor-pointer group"
+            className="flex-shrink-0 cursor-pointer group flex items-center gap-2"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            <span className="text-2xl font-bold text-blue-500 group-hover:text-blue-400 transition-colors">
-              Can.<span className="text-white">Dev</span>
+            {/* 1. Opsiyon: Android Robot İkonu (Yeşil) */}
+            {/* <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-slate-900 font-bold">
+                <Smartphone className="w-5 h-5" />
+            </div> */}
+
+            {/* 2. Opsiyon: Text Logo (Benim Önerim: Kotlin Tarzı) */}
+            <span className="text-xl font-bold font-mono tracking-tighter">
+              <span className="text-white">Can</span>
+              <span className="text-purple-400">.kt</span> {/* Kotlin rengi mor/mavi */}
             </span>
           </div>
 

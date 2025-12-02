@@ -3,13 +3,13 @@ import { Mail, Github, Linkedin, ChevronUp } from 'lucide-react';
 
 const Footer = () => {
     
-  // Sayfanın en üstüne kaydırma fonksiyonu (Android'deki smoothScrollToPosition(0) gibi)
+  // Sayfanın en üstüne kaydırma fonksiyonu
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer id="contact" className="bg-slate-950 py-12 border-t border-white/10 relative">
+    <footer className="bg-slate-950 py-12 border-t border-white/10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
         
         {/* Çağrı (Call to Action) */}
@@ -22,7 +22,7 @@ const Footer = () => {
             </p>
             
             <a 
-                href="mailto:email@adresiniz.com" 
+                href="mailto:mahmutconger@gmail.com" 
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-medium transition-all hover:shadow-lg hover:shadow-blue-500/25"
             >
                 <Mail className="w-5 h-5" />
@@ -37,7 +37,11 @@ const Footer = () => {
         <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6">
             
             <div className="text-center md:text-left">
-                <span className="text-xl font-bold text-blue-400">Can.<span className="text-white">Dev</span></span>
+                {/* LOGO GÜNCELLENDİ: Can.kt */}
+                <span className="text-xl font-bold font-mono tracking-tighter cursor-default">
+                    <span className="text-white">Can</span>
+                    <span className="text-purple-400">.kt</span>
+                </span>
                 <p className="text-gray-500 text-sm mt-1">© 2025 Tüm hakları saklıdır.</p>
             </div>
 
@@ -45,7 +49,7 @@ const Footer = () => {
                 <a href="https://github.com/mahmutconger" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                     <Github className="w-6 h-6" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="https://www.linkedin.com/in/mahmut-can-conger-4305b1299/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Linkedin className="w-6 h-6" />
                 </a>
             </div>

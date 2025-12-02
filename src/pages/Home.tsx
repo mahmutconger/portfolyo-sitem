@@ -1,10 +1,10 @@
 import Navbar from "../components/Navbar";
 import Hero from "../sections/Hero";
-import About from "../sections/About"; // 1. İçe Aktar
+import About from "../sections/About";
 import TechStack from "../sections/TechStack";
 import Projects from "../sections/Projects";
+import Contact from "../sections/Contact"; // 1. Buraya Import Edin
 import Footer from "../sections/Footer";
-
 
 function Home() {
   return (
@@ -13,9 +13,11 @@ function Home() {
       
       <main>
         <Hero />
-        <About />     {/* 2. Hero'dan hemen sonra buraya ekledik */}
+        <About />
         <TechStack />
-        <Projects />
+        {/* Ana sayfada sadece öne çıkanları göster (isFullList={false}) */}
+        <Projects isFullList={false} />
+        <Contact /> {/* 2. Projelerden sonra buraya ekleyin */}
       </main>
 
       <Footer />
@@ -23,4 +25,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Home;
