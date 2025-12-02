@@ -1,17 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+// DÜZELTME: 'User' sadece bir tip olduğu için 'type User' olarak import edilmeli
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from './firebase';
 
-// Sayfalar
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import AllProjects from './pages/AllProjects';
-import NotFound from './pages/NotFound';
-// Contact importunu buradan kaldırdık çünkü Home.tsx içinde kullanacağız.
 
-// --- GÜVENLİK KORUMASI (Guard) ---
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,8 +32,6 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/all-projects" element={<AllProjects />} />
-      
-      {/* Admin Rotası */}
       <Route 
         path="/admin" 
         element={
@@ -45,7 +40,6 @@ function App() {
           </ProtectedRoute>
         } 
       />
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
