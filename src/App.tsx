@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import AllProjects from './pages/AllProjects';
+import NotFound from './pages/NotFound';
 // Contact importunu buradan kaldırdık çünkü Home.tsx içinde kullanacağız.
 
 // --- GÜVENLİK KORUMASI (Guard) ---
@@ -44,6 +45,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

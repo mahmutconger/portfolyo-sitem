@@ -17,10 +17,10 @@ const Contact = () => {
   const [copied, setCopied] = useState(false);
 
   // --- EMAILJS AYARLARI ---
-  const PUBLIC_KEY = ""; 
-  const SERVICE_ID = ""; 
-  const TEMPLATE_VERIFY_ID = ""; // Kullanıcıya kod gönderen
-  const TEMPLATE_ADMIN_ID = "";  // Size bildirim gönderen
+  const PUBLIC_KEY = "NVd_00kA9C2KrM8gL"; 
+  const SERVICE_ID = "service_qrqlzfe"; 
+  const TEMPLATE_VERIFY_ID = "template_ftdoyq1"; // Kullanıcıya kod gönderen
+  const TEMPLATE_ADMIN_ID = "template_xdwo66g";  // Size bildirim gönderen
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
