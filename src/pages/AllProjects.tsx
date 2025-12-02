@@ -1,4 +1,4 @@
-import React from 'react';
+// React default import not required with the new JSX transform
 import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
 import Projects from '../sections/Projects';
