@@ -1,29 +1,47 @@
 import { useState, useEffect } from 'react';
-import { Link as ScrollLink } from 'react-scroll'; // Kaydırma için
-import { useLocation, useNavigate } from 'react-router-dom'; // Sayfa kontrolü için
-import { Menu, X } from 'lucide-react'; // Hamburger menü ikonları
+import { useLocation, useNavigate } from 'react-router-dom'; 
+import { Menu, X } from 'lucide-react'; 
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false); // Mobil menü durumu
-  const [scrolled, setScrolled] = useState(false); // Navbar arkaplanı için
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home'); // Hangi bölümdeyiz?
   
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Şu an Ana Sayfada mıyız kontrolü
   const isHomePage = location.pathname === "/";
 
-  // Scroll dinleyicisi (Navbar arkaplanını koyulaştırmak için)
+  // Scroll dinleyicisi (Hem Navbar stili hem de Active Section için)
   useEffect(() => {
     const handleScroll = () => {
+      // 1. Navbar Arkaplanı
       if (window.scrollY > 50) setScrolled(true);
       else setScrolled(false);
+
+      // 2. Active Section (Spy) Mantığı
+      if (isHomePage) {
+        const sections = ['home', 'about', 'tech', 'projects', 'contact'];
+        
+        // Tersten kontrol ediyoruz ki en alttaki önce yakalansın
+        for (const section of sections.reverse()) {
+            const element = document.getElementById(section);
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                // Eğer bölümün üst kısmı ekranın üst yarısındaysa (veya biraz altındaysa) aktiftir
+                if (rect.top <= 150) { 
+                    setActiveSection(section);
+                    break; // Bulunca döngüden çık
+                }
+            }
+        }
+      }
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isHomePage]);
 
-  // Menü Elemanları
   const navItems = [
     { name: "Ana Sayfa", to: "home" },
     { name: "Hakkımda", to: "about" },
@@ -32,52 +50,48 @@ const Navbar = () => {
     { name: "İletişim", to: "contact" },
   ];
 
-  // Link Bileşeni (Custom Link)
+  // Yumuşak Kaydırma Fonksiyonu
+  const scrollToElement = (id: string) => {
+    if (isHomePage) {
+        const element = document.getElementById(id);
+        if (element) {
+            // Navbar yüksekliği (80px) kadar pay bırakarak kaydır
+            const y = element.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    } else {
+        navigate("/");
+        // Sayfa değiştikten sonra kaydır
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            if (element) {
+                const y = element.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }, 100);
+    }
+    setIsOpen(false); // Mobilde menüyü kapat
+  };
+
   const NavItem = ({ to, name, mobile = false }: { to: string, name: string, mobile?: boolean }) => {
     const baseClasses = mobile 
       ? "block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors cursor-pointer"
       : "cursor-pointer px-3 py-2 rounded-md text-sm font-medium transition-all hover:text-white";
 
-    const inactiveClass = "text-gray-300 hover:bg-white/10";
-    const activeClass = "text-blue-400 bg-white/10 font-bold shadow-[0_0_10px_rgba(59,130,246,0.5)]"; // Aktif olduğunda parlasın
-
-    // Eğer ANA SAYFADAYSAK -> ScrollLink kullan (Kayarak git + Spy)
-    if (isHomePage) {
-      return (
-        <ScrollLink
-          to={to}
-          smooth={true}     // Kayarak git
-          duration={800}    // Ne kadar sürsün (ms)
-          spy={true}        // Casus: Görünürde mi kontrol et
-          offset={-80}      // Navbar yüksekliği kadar pay bırak (Üstüne binmesin)
-          activeClass={activeClass} // Aktif olunca bu class'ı ekle
-          className={`${baseClasses} ${!mobile ? "text-gray-300" : ""}`} // Varsayılan class
-          onClick={() => setIsOpen(false)} // Mobilde tıklayınca menüyü kapat
-        >
-          {name}
-        </ScrollLink>
-      );
-    } 
+    const isActive = activeSection === to;
     
-    // Eğer BAŞKA SAYFADAYSAK -> Normal yönlendirme yap
-    else {
-      return (
-        <button
-          onClick={() => {
-            navigate("/"); // Önce ana sayfaya git
-            // Biraz bekle sonra oraya kaydır (Opsiyonel karmaşık mantık yerine direkt /'a atıyoruz)
-            setTimeout(() => {
-                const element = document.getElementById(to);
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-            setIsOpen(false);
-          }}
-          className={`${baseClasses} ${inactiveClass}`}
-        >
-          {name}
-        </button>
-      );
-    }
+    // Aktiflik Stilleri
+    const inactiveClass = "text-gray-300 hover:bg-white/10";
+    const activeClass = "text-blue-400 bg-white/10 font-bold shadow-[0_0_10px_rgba(59,130,246,0.5)]";
+
+    return (
+      <button
+        onClick={() => scrollToElement(to)}
+        className={`${baseClasses} ${isHomePage && isActive ? activeClass : inactiveClass}`}
+      >
+        {name}
+      </button>
+    );
   };
 
   return (
@@ -85,20 +99,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-         {/* Logo / İsim Kısmı */}
+          {/* Logo Kısmı */}
           <div 
             className="flex-shrink-0 cursor-pointer group flex items-center gap-2"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            {/* 1. Opsiyon: Android Robot İkonu (Yeşil) */}
-            {/* <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-slate-900 font-bold">
-                <Smartphone className="w-5 h-5" />
-            </div> */}
-
-            {/* 2. Opsiyon: Text Logo (Benim Önerim: Kotlin Tarzı) */}
             <span className="text-xl font-bold font-mono tracking-tighter">
               <span className="text-white">Can</span>
-              <span className="text-purple-400">.kt</span> {/* Kotlin rengi mor/mavi */}
+              <span className="text-purple-400">.kt</span>
             </span>
           </div>
 
@@ -121,7 +129,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu (Açılır/Kapanır) */}
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-slate-900 border-b border-white/10">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
