@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Send, CheckCircle, Copy, Loader2, Lock, ArrowRight, Github, Linkedin, FileText, ExternalLink } from 'lucide-react';
+import { Mail, CheckCircle, Copy, Loader2, Lock, ArrowRight, Github, Linkedin, FileText, ExternalLink } from 'lucide-react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import emailjs from '@emailjs/browser';

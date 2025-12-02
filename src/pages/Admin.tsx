@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from 'firebase/firestore'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // EKSİK İKONLAR EKLENDİ: Mail, Calendar
-import { Plus, Trash2, Save, LogOut, Image as ImageIcon, Linkedin, Edit2, Star, MessageSquare, Upload, Loader2, X, Mail, Calendar } from 'lucide-react';
+import { Plus, Trash2, LogOut, Edit2, Star, MessageSquare, Upload, Loader2, X, Mail, Calendar } from 'lucide-react';
 
 const PREDEFINED_TAGS = [
   "Kotlin", "Java", "Jetpack Compose", "XML Views", "Firebase", 

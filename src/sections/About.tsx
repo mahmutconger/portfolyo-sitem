@@ -1,4 +1,4 @@
-import React from 'react';
+// React default import not required with the new JSX transform
 import { 
   GitBranch, 
   Users, 

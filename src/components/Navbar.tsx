@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as ScrollLink } from 'react-scroll'; // Kaydırma için
 import { useLocation, useNavigate } from 'react-router-dom'; // Sayfa kontrolü için
 import { Menu, X } from 'lucide-react'; // Hamburger menü ikonları

@@ -1,4 +1,4 @@
-import React from 'react';
+// React default import not required with the new JSX transform
 import { Code2, Layout, Cpu, GitBranch } from 'lucide-react';
 const technologies = [
   { name: "Android SDK", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original-wordmark.svg" },
