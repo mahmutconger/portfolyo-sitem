@@ -62,18 +62,33 @@ const Admin = () => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Dosya boyutu kontrolü (Örn: 5MB üzeri dosyaları uyar)
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].size > 5 * 1024 * 1024) {
+            alert(`"${files[i].name}" çok büyük! Lütfen 5MB altı resimler yükleyin.`);
+            return;
+        }
+    }
+
     setUploading(true);
 
     try {
-      const uploadedUrls: string[] = [];
+      // FileList'i Array'e çevirip map ile dönüyoruz
+      // Her bir yükleme işlemi bir Promise (Gelecek vaadi) döndürür
+      const uploadPromises = Array.from(files).map(async (file) => {
+        // Dosya ismini benzersiz yap (Türkçe karakter sorununu da çözer)
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}_${file.name.replace(/[^a-zA-Z0-9.]/g, "")}`;
+        const storageRef = ref(storage, `images/${fileName}`);
+        
+        // Yükle
+        const snapshot = await uploadBytes(storageRef, file);
+        
+        // Linki al ve döndür
+        return await getDownloadURL(snapshot.ref);
+      });
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const storageRef = ref(storage, `images/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        uploadedUrls.push(url);
-      }
+      // Promise.all: Tüm yüklemelerin bitmesini bekle (Paralel çalışır)
+      const uploadedUrls = await Promise.all(uploadPromises);
 
       if (isGallery) {
         setGallery((prev) => [...prev, ...uploadedUrls]);
@@ -81,12 +96,13 @@ const Admin = () => {
         setFormData({ ...formData, image: uploadedUrls[0] });
       }
 
-    } catch (error) {
-      console.error("Yükleme hatası:", error);
-      alert("Resim yüklenirken hata oluştu.");
+    } catch (error: any) {
+      console.error("Yükleme Detaylı Hata:", error);
+      // Kullanıcıya teknik hatayı göster (Storage izni vb.)
+      alert(`Yükleme başarısız: ${error.message || "Bilinmeyen hata"}`);
     } finally {
       setUploading(false);
-      e.target.value = '';
+      e.target.value = ''; // Input'u temizle
     }
   };
 
@@ -137,7 +153,7 @@ const Admin = () => {
       try {
         return new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
       } catch (e) {
-        return "";
+        return e;
       }
   };
 
