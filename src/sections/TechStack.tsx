@@ -1,5 +1,6 @@
-// React default import not required with the new JSX transform
 import { Code2, Layout, Cpu, GitBranch } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 const technologies = [
   { name: "Android SDK", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/android/android-original-wordmark.svg" },
   { name: "Kotlin", icon: "https://www.vectorlogo.zone/logos/kotlinlang/kotlinlang-icon.svg" },
@@ -11,29 +12,28 @@ const technologies = [
   { name: "C#", icon: "https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" },
 ];
 
-const features = [
-  { title: "Clean Architecture", desc: "Sürdürülebilir ve test edilebilir kod yapısı", icon: <Layout className="w-6 h-6 text-blue-400" /> },
-  { title: "Jetpack Compose", desc: "Modern UI geliştirme yaklaşımı", icon: <Code2 className="w-6 h-6 text-green-400" /> },
-  { title: "Async Programming", desc: "Coroutines & Flow ile verimli işlemler", icon: <Cpu className="w-6 h-6 text-purple-400" /> },
-  { title: "Atomic Commits", desc: "Düzenli ve takip edilebilir Git geçmişi", icon: <GitBranch className="w-6 h-6 text-orange-400" /> },
-];
-
 const TechStack = () => {
+  const { t } = useTranslation();
+
+  const features = [
+    { title: t('tech.clean_title'), desc: t('tech.clean_desc'), icon: <Layout className="w-6 h-6 text-blue-400" /> },
+    { title: t('tech.compose_title'), desc: t('tech.compose_desc'), icon: <Code2 className="w-6 h-6 text-green-400" /> },
+    { title: t('tech.async_title'), desc: t('tech.async_desc'), icon: <Cpu className="w-6 h-6 text-purple-400" /> },
+    { title: t('tech.atomic_title'), desc: t('tech.atomic_desc'), icon: <GitBranch className="w-6 h-6 text-orange-400" /> },
+  ];
+
   return (
     <section id="tech" className="py-20 bg-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Bölüm Başlığı */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Teknoloji & Yetenekler
+            {t('tech.title')}
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Geliştirme sürecimde kullandığım modern araçlar ve benimsediğim yazılım prensipleri.
+            {t('tech.subtitle')}
           </p>
         </div>
 
-        {/* 1. Kısım: İkon Grid (RecyclerView Grid Layout gibi) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           {technologies.map((tech, index) => (
             <div 
@@ -48,7 +48,6 @@ const TechStack = () => {
           ))}
         </div>
 
-        {/* 2. Kısım: Prensipler (Features) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => (
                 <div key={index} className="flex items-start gap-4 p-6 bg-slate-900 rounded-lg border-l-4 border-blue-500 hover:bg-slate-800 transition-colors">
@@ -62,7 +61,6 @@ const TechStack = () => {
                 </div>
             ))}
         </div>
-
       </div>
     </section>
   );
