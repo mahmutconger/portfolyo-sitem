@@ -1,7 +1,9 @@
+// src/i18n.ts
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// Çeviri kaynaklarını ayrı bir değişkende tutmak okunabilirliği artırır
 const resources = {
   en: {
     translation: {
@@ -38,10 +40,10 @@ const resources = {
         high_desc: "Technical foundation on database systems (C#, MSSQL) and desktop applications.",
         certs_title: "Certificates & Competencies"
       },
-      "notfound": {
-       "subtitle": "Activity Not Found Exception!",
-        "description": "The page you are looking for could not be compiled or has been garbage collected. Please return to the main thread.",
-        "back_home": "Back to Home"
+      notfound: {
+        subtitle: "Activity Not Found Exception!",
+        description: "The page you are looking for could not be compiled or has been garbage collected. Please return to the main thread.",
+        back_home: "Back to Home"
       },
       tech: {
         title: "Technology & Skills",
@@ -136,10 +138,10 @@ const resources = {
         high_desc: "Veri tabanı sistemleri (C#, MSSQL) ve masaüstü uygulamaları üzerine teknik altyapı eğitimi.",
         certs_title: "Sertifikalar & Yetkinlikler"
       },
-      "notfound": {
-       "subtitle": "Activity Not Found Exception!",
-       "description": "Aradığınız sayfa derlenemedi veya garbage collector tarafından temizlendi. Lütfen ana thread'e geri dönün.",
-       "back_home": "Ana Sayfaya Dön"
+      notfound: {
+        subtitle: "Activity Not Found Exception!",
+        description: "Aradığınız sayfa derlenemedi veya garbage collector tarafından temizlendi. Lütfen ana thread'e geri dönün.",
+        back_home: "Ana Sayfaya Dön"
       },
       tech: {
         title: "Teknoloji & Yetenekler",
@@ -201,10 +203,24 @@ const resources = {
   }
 };
 
-i18n.use(LanguageDetector).use(initReactI18next).init({
-  resources,
-  fallbackLng: 'tr',
-  interpolation: { escapeValue: false }
-});
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: 'tr',
+    supportedLngs: ['tr', 'en'],
+    interpolation: {
+      escapeValue: false, // React XSS'e karşı güvenli olduğu için false
+    },
+    detection: {
+      // Dil algılama sırası: Önce localStorage, sonra tarayıcı dili
+      order: ['localStorage', 'navigator'],
+      // Tercihi localStorage'a kaydet
+      caches: ['localStorage'],
+      // localStorage'daki anahtar ismi
+      lookupLocalStorage: 'appLang',
+    },
+  });
 
 export default i18n;

@@ -1,0 +1,67 @@
+{
+  "admin": {
+    "title": "Yönetim Paneli",
+    "subtitle": "İçeriklerini ve gelen kutunu yönet.",
+    "logout": "Çıkış",
+    "tabs": {
+      "projects": "Projeler",
+      "messages": "Mesajlar"
+    },
+    "form": {
+      "addProject": "Yeni Proje Ekle",
+      "editProject": "Projeyi Düzenle",
+      "cancel": "İptal",
+      "langTab": {
+        "tr": "Türkçe",
+        "en": "İngilizce"
+      },
+      "fields": {
+        "title": "Başlık",
+        "shortDesc": "Kısa Açıklama",
+        "longStory": "Uzun Hikaye",
+        "coverImage": "Kapak Resmi",
+        "selectFile": "Dosya Seç",
+        "featured": "Ana Sayfada Öne Çıkar",
+        "technologies": "Teknolojiler",
+        "otherTag": "Diğer...",
+        "features": "Özellikler",
+        "gallery": "Galeri",
+        "multiPhoto": "Çoklu Fotoğraf Ekle",
+        "githubUrl": "GitHub URL",
+        "liveUrl": "Play Store URL",
+        "linkedinUrl": "LinkedIn Post URL"
+      },
+      "submit": {
+        "publish": "Projeyi Yayınla",
+        "update": "Güncellemeyi Kaydet",
+        "processing": "İşleniyor...",
+        "uploading": "Resim Yükleniyor..."
+      },
+      "validation": {
+        "fileTooLarge": "çok büyük! Lütfen 5MB altı resimler yükleyin.",
+        "uploadFailed": "Yükleme başarısız",
+        "unknownError": "Bilinmeyen hata",
+        "deleteConfirm": "Bu öğeyi kalıcı olarak silmek istediğinize emin misiniz?",
+        "deleteError": "Hata oluştu.",
+        "added": "Eklendi!",
+        "updated": "Güncellendi!",
+        "error": "Hata oluştu."
+      }
+    },
+    "projects": {
+      "listTitle": "Mevcut Projeler",
+      "featured": "Öne Çıkan",
+      "edit": "Düzenle",
+      "delete": "Sil"
+    },
+    "messages": {
+      "title": "Gelen Mesajlar",
+      "total": "mesaj",
+      "empty": "Henüz hiç mesajınız yok.",
+      "reply": "Yanıtla",
+      "replySubject": "Dönüş: Proje Hakkında",
+      "replyBody": "Merhaba {{name}},\n\nMesajını aldım...",
+      "delete": "Sil"
+    }
+  }
+}

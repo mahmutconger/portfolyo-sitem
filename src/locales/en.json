@@ -1,0 +1,67 @@
+{
+  "admin": {
+    "title": "Admin Panel",
+    "subtitle": "Manage your content and inbox.",
+    "logout": "Logout",
+    "tabs": {
+      "projects": "Projects",
+      "messages": "Messages"
+    },
+    "form": {
+      "addProject": "Add New Project",
+      "editProject": "Edit Project",
+      "cancel": "Cancel",
+      "langTab": {
+        "tr": "Turkish",
+        "en": "English"
+      },
+      "fields": {
+        "title": "Title",
+        "shortDesc": "Short Description",
+        "longStory": "Long Story",
+        "coverImage": "Cover Image",
+        "selectFile": "Select File",
+        "featured": "Feature on Homepage",
+        "technologies": "Technologies",
+        "otherTag": "Other...",
+        "features": "Features",
+        "gallery": "Gallery",
+        "multiPhoto": "Add Multiple Photos",
+        "githubUrl": "GitHub URL",
+        "liveUrl": "Play Store URL",
+        "linkedinUrl": "LinkedIn Post URL"
+      },
+      "submit": {
+        "publish": "Publish Project",
+        "update": "Save Changes",
+        "processing": "Processing...",
+        "uploading": "Uploading Image..."
+      },
+      "validation": {
+        "fileTooLarge": "is too large! Please upload images under 5MB.",
+        "uploadFailed": "Upload failed",
+        "unknownError": "Unknown error",
+        "deleteConfirm": "Are you sure you want to permanently delete this item?",
+        "deleteError": "An error occurred.",
+        "added": "Added!",
+        "updated": "Updated!",
+        "error": "An error occurred."
+      }
+    },
+    "projects": {
+      "listTitle": "Current Projects",
+      "featured": "Featured",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "messages": {
+      "title": "Inbox",
+      "total": "messages",
+      "empty": "You have no messages yet.",
+      "reply": "Reply",
+      "replySubject": "Re: About Project",
+      "replyBody": "Hello {{name}},\n\nI received your message...",
+      "delete": "Delete"
+    }
+  }
+}
