@@ -38,6 +38,11 @@ const resources = {
         high_desc: "Technical foundation on database systems (C#, MSSQL) and desktop applications.",
         certs_title: "Certificates & Competencies"
       },
+      "notfound": {
+       "subtitle": "Activity Not Found Exception!",
+        "description": "The page you are looking for could not be compiled or has been garbage collected. Please return to the main thread.",
+        "back_home": "Back to Home"
+      },
       tech: {
         title: "Technology & Skills",
         subtitle: "Modern tools and software principles I use in my development process.",
@@ -130,6 +135,11 @@ const resources = {
         high: "Veri Bilimi ve Depolama",
         high_desc: "Veri tabanı sistemleri (C#, MSSQL) ve masaüstü uygulamaları üzerine teknik altyapı eğitimi.",
         certs_title: "Sertifikalar & Yetkinlikler"
+      },
+      "notfound": {
+       "subtitle": "Activity Not Found Exception!",
+       "description": "Aradığınız sayfa derlenemedi veya garbage collector tarafından temizlendi. Lütfen ana thread'e geri dönün.",
+       "back_home": "Ana Sayfaya Dön"
       },
       tech: {
         title: "Teknoloji & Yetenekler",
