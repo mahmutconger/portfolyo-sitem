@@ -67,7 +67,7 @@ const Projects = ({ isFullList = false }: { isFullList?: boolean }) => {
         }
         
         const querySnapshot = await getDocs(q);
-        let projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as ProjectData[];
+        let projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as Record<string, unknown> })) as ProjectData[];
 
         if (!isFullList) {
           projectsData = projectsData.filter(p => p.isFeatured === true);
