@@ -100,6 +100,49 @@ const resources = {
         cta_desc: "Feel free to reach out to talk about Android apps, Jetpack Compose, or modern mobile technologies.",
         mail_btn: "Send Me an Email",
         rights: "All rights reserved."
+      },
+      admin: {
+        title: "Admin Panel",
+        subtitle: "Management Console",
+        logout: "Logout",
+        tabs: {
+          projects: "Projects",
+          messages: "Messages"
+        },
+        form: {
+          addProject: "Add New Project",
+          langTab: {
+            tr: "Turkish Content",
+            en: "English Content"
+          },
+          fields: {
+            title: "Project Title",
+            shortDesc: "Short Description",
+            coverImage: "Cover Image",
+            selectFile: "Select File",
+            featured: "Featured Project",
+            longStory: "Detailed Story",
+            technologies: "Technologies Used",
+            otherTag: "Add Other Tag",
+            features: "Project Features",
+            gallery: "Project Gallery",
+            multiPhoto: "Select Multiple Photos",
+            githubUrl: "GitHub URL",
+            liveUrl: "Live Demo URL",
+            linkedinUrl: "LinkedIn Post URL"
+          },
+          submit: {
+            publish: "Publish Project",
+            update: "Update Project",
+            saving: "Saving..."
+          }
+        },
+        projects: {
+          listTitle: "Project List",
+          featured: "Featured",
+          edit: "Edit",
+          delete: "Delete"
+        }
       }
     }
   },
@@ -198,6 +241,49 @@ const resources = {
         cta_desc: "Android, Jetpack Compose veya modern teknolojiler hakkında konuşmak için bana ulaşabilirsiniz.",
         mail_btn: "Bana Mail Gönder",
         rights: "Tüm hakları saklıdır."
+      },
+      admin: {
+        title: "Admin Paneli",
+        subtitle: "Yönetim Konsolu",
+        logout: "Çıkış Yap",
+        tabs: {
+          projects: "Projeler",
+          messages: "Mesajlar"
+        },
+        form: {
+          addProject: "Yeni Proje Ekle",
+          langTab: {
+            tr: "Türkçe İçerik",
+            en: "İngilizce İçerik"
+          },
+          fields: {
+            title: "Proje Başlığı",
+            shortDesc: "Kısa Açıklama",
+            coverImage: "Kapak Görseli",
+            selectFile: "Dosya Seç",
+            featured: "Öne Çıkan Proje",
+            longStory: "Detaylı Hikaye",
+            technologies: "Kullanılan Teknolojiler",
+            otherTag: "Diğer Etiket Ekle",
+            features: "Proje Özellikleri",
+            gallery: "Proje Galerisi",
+            multiPhoto: "Çoklu Fotoğraf Seç",
+            githubUrl: "GitHub Linki",
+            liveUrl: "Canlı Demo Linki",
+            linkedinUrl: "LinkedIn Gönderi Linki"
+          },
+          submit: {
+            publish: "Projeyi Yayınla",
+            update: "Projeyi Güncelle",
+            saving: "Kaydediliyor..."
+          }
+        },
+        projects: {
+          listTitle: "Proje Listesi",
+          featured: "Öne Çıkan",
+          edit: "Düzenle",
+          delete: "Sil"
+        }
       }
     }
   }
