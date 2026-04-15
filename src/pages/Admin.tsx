@@ -277,24 +277,39 @@ const Admin: React.FC = () => {
   };
 
   // ── CRUD ──────────────────────────────────────────────────────────────────
-  const handleEdit = (project: ProjectData) => {
-    setActiveTab('projects');
-    setEditingId(project.id!);
-    setFormData({
-      title: project.title ?? EMPTY_BILINGUAL_TEXT,
-      description: project.description ?? EMPTY_BILINGUAL_TEXT,
-      longDescription: project.longDescription ?? EMPTY_BILINGUAL_TEXT,
-      features: project.features ?? EMPTY_BILINGUAL_LIST,
-      tags: project.tags ?? [],
-      image: project.image ?? '',
-      gallery: project.gallery ?? [],
-      githubUrl: project.githubUrl ?? '',
-      liveUrl: project.liveUrl ?? '',
-      linkedinUrl: project.linkedinUrl ?? '',
-      isFeatured: project.isFeatured ?? false,
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+const handleEdit = (project: ProjectData) => {
+  setActiveTab('projects');
+  setEditingId(project.id!);
+
+  setFormData({
+    title: typeof project.title === 'string' 
+      ? { tr: project.title, en: project.title } 
+      : (project.title ?? { tr: '', en: '' }),
+
+    description: typeof project.description === 'string'
+      ? { tr: project.description, en: project.description }
+      : (project.description ?? { tr: '', en: '' }),
+
+    longDescription: typeof project.longDescription === 'string'
+      ? { tr: project.longDescription, en: project.longDescription }
+      : (project.longDescription ?? { tr: '', en: '' }),
+
+    features: {
+      tr: project.features?.tr ?? [],
+      en: project.features?.en ?? []
+    },
+
+    tags: Array.isArray(project.tags) ? project.tags : [],
+    image: project.image ?? '',
+    gallery: Array.isArray(project.gallery) ? project.gallery : [],
+    githubUrl: project.githubUrl ?? '',
+    liveUrl: project.liveUrl ?? '',
+    linkedinUrl: project.linkedinUrl ?? '',
+    isFeatured: project.isFeatured ?? false,
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
   const handleCancelEdit = () => {
     setEditingId(null);
@@ -350,10 +365,14 @@ const Admin: React.FC = () => {
   // ---------------------------------------------------------------------------
 
   /** Get display title for the current UI language, with fallback */
-  const getDisplayTitle = (project: ProjectData): string => {
-    const lang = i18n.language as ContentLang;
-    return project.title?.[lang] || project.title?.tr || project.title?.en || '—';
-  };
+const getDisplayTitle = (project: ProjectData): string => {
+  const lang = i18n.language as ContentLang;
+  
+  if (typeof project.title === 'object' && project.title !== null) {
+    return project.title[lang] || project.title.tr || project.title.en || '—';
+  }
+  return (project.title as unknown as string) || '—';
+};
 
   // ---------------------------------------------------------------------------
   // Render
@@ -584,7 +603,7 @@ const Admin: React.FC = () => {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.tags.map((tag, i) => (
+                  {(formData.tags ?? []).map((tag, i) => (
                     <span key={i} className="text-xs bg-blue-900/50 text-blue-200 px-2 py-1 rounded flex items-center gap-1">
                       {tag}
                       <button type="button" onClick={() => removeTag(i)}>
@@ -616,7 +635,7 @@ const Admin: React.FC = () => {
                     </button>
                   </div>
                   <ul className="max-h-32 overflow-y-auto space-y-1">
-                    {formData.features[contentLang].map((f, i) => (
+                    {(formData.features?.[contentLang] ?? []).map((f, i) => (
                       <li key={i} className="text-xs bg-slate-900 p-2 rounded flex justify-between">
                         {f}
                         <button type="button" onClick={() => removeFeature(i)}>
@@ -647,7 +666,7 @@ const Admin: React.FC = () => {
                     />
                   </label>
                   <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto">
-                    {formData.gallery.map((url, i) => (
+                    {(formData.gallery ?? []).map((url, i) => (
                       <div key={i} className="relative group aspect-square bg-slate-900 rounded overflow-hidden">
                         <img src={url} className="w-full h-full object-cover" alt={`Gallery ${i}`} />
                         <button
