@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, db, storage } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from 'firebase/firestore'; 
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 // EKSİK İKONLAR EKLENDİ: Mail, Calendar
 import { Plus, Trash2, LogOut, Edit2, Star, MessageSquare, Upload, Loader2, X, Mail, Calendar } from 'lucide-react';
@@ -96,10 +96,9 @@ const Admin = () => {
         setFormData({ ...formData, image: uploadedUrls[0] });
       }
 
-    } catch (error: any) {
-      console.error("Yükleme Detaylı Hata:", error);
-      // Kullanıcıya teknik hatayı göster (Storage izni vb.)
-      alert(`Yükleme başarısız: ${error.message || "Bilinmeyen hata"}`);
+    } catch (error) {
+     const errMsg = error instanceof Error ? error.message : "Bilinmeyen hata";
+     alert(`Yükleme başarısız: ${errMsg}`);
     } finally {
       setUploading(false);
       e.target.value = ''; // Input'u temizle
@@ -148,14 +147,21 @@ const Admin = () => {
     setTags([]); setFeatures([]); setGallery([]);
   };
 
-  const formatDate = (date: any) => {
-      if (!date) return "";
-      try {
-        return new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
-      } catch (e) {
-        return e;
-      }
-  };
+const formatDate = (date: any) => {
+    if (!date) return "";
+    try {
+      return new Intl.DateTimeFormat('tr-TR', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      }).format(date);
+    } catch (e) {
+      // Hata nesnesini (e) doğrudan dönmek yerine boş string veya hata mesajı dönmelisin
+      return ""; 
+    }
+};
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 md:p-12">
