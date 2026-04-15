@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-// DÜZELTME: 'User' sadece bir tip olduğu için 'type User' olarak import edilmeli
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from './firebase';
 
@@ -8,6 +7,7 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import AllProjects from './pages/AllProjects';
+import NotFound from './pages/NotFound';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -40,6 +40,7 @@ function App() {
           </ProtectedRoute>
         } 
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
