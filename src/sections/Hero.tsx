@@ -50,7 +50,7 @@ const Hero = () => {
               <SocialButton href="https://github.com/mahmutconger" icon={<Github className="w-5 h-5" />} label="GitHub" />
               <SocialButton href="https://www.linkedin.com/in/mahmut-can-conger-4305b1299/" icon={<Linkedin className="w-5 h-5" />} label="LinkedIn" />
               <SocialButton href="mailto:mahmutconger@gmail.com" icon={<Mail className="w-5 h-5" />} label="Email" />
-              <a href="/CV-TR.pdf" target="_blank" className="p-3 bg-slate-800 rounded-full text-gray-400 hover:text-green-400 hover:bg-slate-700 transition-all border border-white/5 hover:border-green-500/30 group" title={t('hero.cv_download')}>
+              <a href="/CV_TR.pdf" target="_blank" className="p-3 bg-slate-800 rounded-full text-gray-400 hover:text-green-400 hover:bg-slate-700 transition-all border border-white/5 hover:border-green-500/30 group" title={t('hero.cv_download')}>
                  <Download className="w-5 h-5 group-hover:animate-bounce" />
                </a>
             </div>

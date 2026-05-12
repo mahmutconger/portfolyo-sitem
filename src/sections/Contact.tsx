@@ -118,7 +118,7 @@ const Contact = () => {
                   <div className="p-2 bg-slate-900 rounded-lg text-blue-400 group-hover:text-white group-hover:bg-white/20 group-hover:scale-110 transition-transform"><Linkedin className="w-5 h-5" /></div>
                   <span className="text-sm font-medium text-gray-300 group-hover:text-white">LinkedIn</span>
                 </a>
-                <a href="/CV-TR.pdf" download="Mahmut_Can_Conger_CV.pdf" className="col-span-2 flex items-center gap-3 p-3 bg-slate-800 rounded-xl border border-white/5 hover:bg-green-600/90 transition-all group">
+                <a href="/CV_TR.pdf" download="Mahmut_Can_Conger_CV.pdf" className="col-span-2 flex items-center gap-3 p-3 bg-slate-800 rounded-xl border border-white/5 hover:bg-green-600/90 transition-all group">
                   <div className="p-2 bg-slate-900 rounded-lg text-green-400 group-hover:text-white group-hover:bg-white/20 group-hover:scale-110 transition-transform"><FileText className="w-5 h-5" /></div>
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-gray-300 group-hover:text-white">{t('contact.cv_btn')}</span>
