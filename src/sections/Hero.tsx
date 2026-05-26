@@ -1,101 +1,136 @@
-import { Github, Linkedin, Mail, ArrowRight, Smartphone, Terminal, Cpu, Code2, Download } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowRight, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
   const { t } = useTranslation();
 
+  const scrollToProjects = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center pt-16 relative overflow-hidden bg-slate-950">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]"></div>
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center bg-zinc-950 overflow-hidden"
+    >
+      {/* Subtle grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#27272a18_1px,transparent_1px),linear-gradient(to_bottom,#27272a18_1px,transparent_1px)] bg-[size:48px_48px]" />
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <style>{`
-          @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
-          @keyframes float-delayed { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(20px) rotate(-5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
-        `}</style>
-        <div className="absolute top-20 left-10 text-slate-800/50 animate-[float_6s_ease-in-out_infinite]"><Terminal size={64} /></div>
-        <div className="absolute bottom-20 right-10 text-slate-800/50 animate-[float-delayed_7s_ease-in-out_infinite]"><Smartphone size={80} /></div>
-        <div className="absolute top-32 right-20 text-blue-900/20 animate-[float_8s_ease-in-out_infinite]"><Cpu size={56} /></div>
-        <div className="absolute bottom-32 left-20 text-purple-900/20 animate-[float-delayed_9s_ease-in-out_infinite]"><Code2 size={48} /></div>
-      </div>
+      {/* Radial glow blobs */}
+      <div className="absolute top-1/4 right-1/4 w-[700px] h-[700px] bg-indigo-600/8 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/6 w-[500px] h-[500px] bg-purple-700/6 rounded-full blur-[110px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse md:flex-row items-center gap-12 relative z-10">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 flex flex-col-reverse md:flex-row items-center gap-16 pt-20 pb-16">
+
+        {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+
+          {/* Status badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-700/60 text-zinc-400 text-xs font-medium mb-8">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
             {t('hero.title')}
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Mahmut Can <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-indigo-500 animate-gradient">ÇÖNGER</span>
+
+          {/* Name */}
+          <h1 className="text-5xl md:text-[68px] font-bold tracking-tight text-white mb-5 leading-[1.05]">
+            Mahmut Can{' '}
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-300 bg-clip-text text-transparent">
+              ÇÖNGER
+            </span>
           </h1>
-          
-          <p className="text-gray-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+
+          {/* Description */}
+          <p className="text-zinc-400 text-[17px] leading-relaxed mb-10 max-w-lg mx-auto md:mx-0">
             {t('hero.description')}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
-            <a href="#projects" className="group relative px-8 py-3 bg-blue-600 rounded-full text-white font-medium overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)]">
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-              <span className="flex items-center gap-2 relative">
-                {t('hero.projects_btn')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </span>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center md:justify-start mb-10">
+            <a
+              href="#projects"
+              onClick={scrollToProjects}
+              className="group flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-0.5"
+            >
+              {t('hero.projects_btn')}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
+            <a
+              href="/CV_TR.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-white/5 text-white text-sm font-semibold rounded-xl border border-zinc-700 hover:border-zinc-600 transition-all duration-200 hover:-translate-y-0.5"
+            >
+              <Download className="w-4 h-4" />
+              {t('hero.cv_download')}
+            </a>
+          </div>
 
-            <div className="flex items-center gap-3 ml-0 sm:ml-4">
-              <SocialButton href="https://github.com/mahmutconger" icon={<Github className="w-5 h-5" />} label="GitHub" />
-              <SocialButton href="https://www.linkedin.com/in/mahmut-can-conger-4305b1299/" icon={<Linkedin className="w-5 h-5" />} label="LinkedIn" />
-              <SocialButton href="mailto:mahmutconger@gmail.com" icon={<Mail className="w-5 h-5" />} label="Email" />
-              <a href="/CV_TR.pdf" target="_blank" className="p-3 bg-slate-800 rounded-full text-gray-400 hover:text-green-400 hover:bg-slate-700 transition-all border border-white/5 hover:border-green-500/30 group" title={t('hero.cv_download')}>
-                 <Download className="w-5 h-5 group-hover:animate-bounce" />
-               </a>
-            </div>
+          {/* Social icons */}
+          <div className="flex items-center gap-2.5 justify-center md:justify-start">
+            {[
+              { href: 'https://github.com/mahmutconger', icon: <Github className="w-[18px] h-[18px]" />, label: 'GitHub' },
+              { href: 'https://www.linkedin.com/in/mahmut-can-conger-4305b1299/', icon: <Linkedin className="w-[18px] h-[18px]" />, label: 'LinkedIn' },
+              { href: 'mailto:mahmutconger@gmail.com', icon: <Mail className="w-[18px] h-[18px]" />, label: 'Email' },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.href.startsWith('mailto') ? undefined : '_blank'}
+                rel="noopener noreferrer"
+                aria-label={item.label}
+                className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all duration-200 hover:-translate-y-0.5"
+              >
+                {item.icon}
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className="flex-1 relative group">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-gradient-to-tr from-blue-500 via-purple-500 to-transparent rounded-full opacity-50 blur-xl animate-[spin_10s_linear_infinite]"></div>
-            
-            <div className="relative w-64 h-64 md:w-80 md:h-80 mx-auto rounded-full overflow-hidden border-4 border-slate-900 shadow-2xl z-10">
-                <img 
-                    src="/profile.jpg" 
-                    alt="Mahmut Can Çönger" 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                
-                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        {/* Right: Profile photo */}
+        <div className="flex-1 flex justify-center md:justify-end">
+          <div className="relative group">
+            {/* Animated gradient ring */}
+            <div className="absolute -inset-[3px] bg-gradient-to-br from-indigo-500 via-purple-600 to-zinc-800 rounded-3xl opacity-60 group-hover:opacity-90 transition-opacity duration-500 blur-[3px]" />
+
+            {/* Photo */}
+            <div className="relative w-64 h-64 md:w-[300px] md:h-[300px] rounded-3xl overflow-hidden border border-white/5">
+              <img
+                src="/profile.jpg"
+                alt="Mahmut Can Çönger"
+                className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/30 via-transparent to-transparent" />
             </div>
 
-            <div className="absolute -bottom-4 right-10 md:right-20 bg-slate-800/90 backdrop-blur-md p-3 rounded-xl border border-white/10 shadow-xl animate-[float_4s_ease-in-out_infinite] z-20">
-                <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="mt-2 text-xs font-mono text-blue-300">
-                    &lt;Android /&gt;
-                </div>
+            {/* Floating terminal card */}
+            <div className="absolute -bottom-4 -left-5 bg-zinc-900/90 backdrop-blur-md px-4 py-3 rounded-xl border border-zinc-700/60 shadow-2xl">
+              <div className="flex items-center gap-1.5 mb-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+              </div>
+              <code className="text-[11px] font-mono text-indigo-300">&lt;Android /&gt;</code>
             </div>
+
+            {/* Kotlin badge */}
+            <div className="absolute -top-3 -right-4 flex items-center gap-1.5 bg-zinc-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-700/60 text-[11px] font-semibold text-purple-300">
+              Kotlin <span className="text-purple-400">✦</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600">
+        <span className="text-[10px] uppercase tracking-[0.25em]">scroll</span>
+        <div className="w-px h-8 bg-gradient-to-b from-zinc-600 to-transparent" />
       </div>
     </section>
   );
 };
-
-const SocialButton = ({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) => (
-    <a 
-        href={href} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="p-3 bg-slate-800 rounded-full text-gray-400 hover:text-white hover:bg-slate-700 transition-all border border-white/5 hover:border-blue-500/30 hover:-translate-y-1"
-        aria-label={label}
-    >
-        {icon}
-    </a>
-);
 
 export default Hero;

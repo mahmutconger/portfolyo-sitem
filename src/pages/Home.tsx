@@ -8,7 +8,7 @@ import Footer from "../sections/Footer";
 
 const Home = () => {
   return (
-    <div className="bg-slate-900 min-h-screen text-white selection:bg-blue-500 selection:text-white">
+    <div className="bg-zinc-950 min-h-screen text-white selection:bg-indigo-500/30 selection:text-indigo-200">
       <Navbar />
       
       <main>
