@@ -12,6 +12,7 @@ const resources = {
         about: "About",
         tech: "Skills",
         projects: "Projects",
+        articles: "Articles",
         contact: "Contact",
         select_language: "Select Language"
       },
@@ -72,6 +73,16 @@ const resources = {
         demo: "Play Store / Demo",
         linkedin: "LinkedIn Post",
         loading: "Loading Projects..."
+      },
+      articles: {
+        title: "My Articles",
+        subtitle: "I share what I learn and my technical experiences on Medium.",
+        read: "Read Article",
+        view_all: "All My Posts",
+        visit_medium: "Go to My Medium Profile",
+        loading: "Loading articles...",
+        empty: "No articles published yet.",
+        error: "Articles could not be loaded right now."
       },
       contact: {
         label: "Contact & Social",
@@ -153,6 +164,7 @@ const resources = {
         about: "Hakkımda",
         tech: "Yetenekler",
         projects: "Projeler",
+        articles: "Makaleler",
         contact: "İletişim",
         select_language: "Dil Seçin"
       },
@@ -213,6 +225,16 @@ const resources = {
         demo: "Play Store / Demo",
         linkedin: "LinkedIn Gönderisi",
         loading: "Projeler Yükleniyor..."
+      },
+      articles: {
+        title: "Makalelerim",
+        subtitle: "Öğrendiklerimi ve teknik deneyimlerimi Medium'da paylaşıyorum.",
+        read: "Makaleyi Oku",
+        view_all: "Tüm Yazılarım",
+        visit_medium: "Medium Profilime Git",
+        loading: "Makaleler yükleniyor...",
+        empty: "Henüz yayınlanmış bir makale yok.",
+        error: "Makaleler şu anda yüklenemedi."
       },
       contact: {
         label: "İletişim & Sosyal",
