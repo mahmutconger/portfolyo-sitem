@@ -17,7 +17,7 @@ const Navbar = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       if (isHomePage) {
-        const sections = ['home', 'about', 'tech', 'projects', 'contact'];
+        const sections = ['home', 'about', 'tech', 'projects', 'articles', 'contact'];
         for (const section of [...sections].reverse()) {
           const el = document.getElementById(section);
           if (el && el.getBoundingClientRect().top <= 120) {
@@ -36,6 +36,7 @@ const Navbar = () => {
     { name: t('nav.about'), to: 'about' },
     { name: t('nav.tech'), to: 'tech' },
     { name: t('nav.projects'), to: 'projects' },
+    { name: t('nav.articles'), to: 'articles' },
     { name: t('nav.contact'), to: 'contact' },
   ];
 
