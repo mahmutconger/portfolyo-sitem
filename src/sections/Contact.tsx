@@ -7,6 +7,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import emailjs from '@emailjs/browser';
 import { useTranslation } from 'react-i18next';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const PUBLIC_KEY       = 'NVd_00kA9C2KrM8gL';
 const SERVICE_ID       = 'service_qrqlzfe';
@@ -15,6 +16,7 @@ const TEMPLATE_ADMIN   = 'template_xdwo66g';
 
 const Contact = () => {
   const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
   const [step, setStep] = useState<'form' | 'verify' | 'success'>('form');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
@@ -76,6 +78,7 @@ const Contact = () => {
       }, PUBLIC_KEY);
       setLoading(false);
       setStep('success');
+      trackEvent('contact_submit');
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => { setStep('form'); setUserCode(''); }, 5000);
     } catch {
@@ -156,6 +159,7 @@ const Contact = () => {
             <a
               href="/CV_TR.pdf"
               download="Mahmut_Can_Conger_CV.pdf"
+              onClick={() => trackEvent('cv_download', 'contact')}
               className="flex items-center gap-3 p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl hover:border-emerald-500/40 hover:bg-zinc-800 transition-all duration-200 group"
             >
               <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-zinc-400 group-hover:text-emerald-400 transition-colors">

@@ -1,8 +1,10 @@
 import { Github, Linkedin, Mail, ArrowRight, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Hero = () => {
   const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
 
   const scrollToProjects = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -62,6 +64,7 @@ const Hero = () => {
               href="/CV_TR.pdf"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent('cv_download', 'hero')}
               className="flex items-center gap-2 px-6 py-3 bg-transparent hover:bg-white/5 text-white text-sm font-semibold rounded-xl border border-zinc-700 hover:border-zinc-600 transition-all duration-200 hover:-translate-y-0.5"
             >
               <Download className="w-4 h-4" />
@@ -82,6 +85,7 @@ const Hero = () => {
                 target={item.href.startsWith('mailto') ? undefined : '_blank'}
                 rel="noopener noreferrer"
                 aria-label={item.label}
+                onClick={() => trackEvent('social_click', item.label.toLowerCase())}
                 className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all duration-200 hover:-translate-y-0.5"
               >
                 {item.icon}

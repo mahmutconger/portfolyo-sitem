@@ -9,8 +9,9 @@ import {
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   Plus, Trash2, LogOut, Edit2, Star, MessageSquare,
-  Upload, Loader2, X, Mail, Calendar, Globe,
+  Upload, Loader2, X, Mail, Calendar, Globe, Activity,
 } from 'lucide-react';
+import AnalyticsTab from '../components/AnalyticsTab';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -93,7 +94,7 @@ const Admin: React.FC = () => {
   // ── UI state ──────────────────────────────────────────────────────────────
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'projects' | 'messages'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'messages' | 'analytics'>('projects');
 
   /**
    * contentLang: which language tab is active inside the form
@@ -406,6 +407,12 @@ const getDisplayTitle = (project: ProjectData): string => {
                   {messagesList.length}
                 </span>
               )}
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+            >
+              <Activity className="w-4 h-4" /> Hareketler
             </button>
           </div>
 
@@ -839,6 +846,11 @@ const getDisplayTitle = (project: ProjectData): string => {
             )}
           </div>
         </div>
+      )}
+
+      {/* ── Analytics Tab ────────────────────────────────────────────────── */}
+      {activeTab === 'analytics' && (
+        <AnalyticsTab />
       )}
     </div>
   );

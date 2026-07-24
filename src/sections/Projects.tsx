@@ -7,6 +7,7 @@ import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 export interface ProjectData {
   id?: string;
@@ -162,10 +163,19 @@ const ProjectCard = ({
 /* ─── Projects Section ───────────────────────────────────────── */
 const Projects = ({ isFullList = false }: { isFullList?: boolean }) => {
   const { t } = useTranslation();
+  const { trackEvent } = useAnalytics();
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const handleProjectClick = (project: ProjectData) => {
+    const title = typeof project.title === 'string'
+      ? project.title
+      : (project.title as any)?.tr || (project.title as any)?.en || '';
+    trackEvent('project_click', title);
+    setSelectedProject(project);
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -238,7 +248,7 @@ const Projects = ({ isFullList = false }: { isFullList?: boolean }) => {
                 <ProjectCard
                   key={project.id || index}
                   project={project}
-                  onClick={() => setSelectedProject(project)}
+                  onClick={() => handleProjectClick(project)}
                 />
               ))}
             </div>
