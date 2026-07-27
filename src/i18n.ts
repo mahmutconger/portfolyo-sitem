@@ -17,7 +17,7 @@ const resources = {
         select_language: "Select Language"
       },
       hero: {
-        title: "Full Stack Android Developer",
+      
         description: "Transforming ideas into living mobile experiences with the power of Kotlin and Jetpack Compose. Focusing on modern architecture, clean code, and high performance.",
         projects_btn: "Explore My Projects",
         cv_download: "Download CV"
@@ -169,7 +169,7 @@ const resources = {
         select_language: "Dil Seçin"
       },
       hero: {
-        title: "Full Stack Android Geliştirici",
+    
         description: "Fikirleri, Kotlin ve Jetpack Compose gücüyle yaşayan mobil deneyimlere dönüştürüyorum. Modern mimari, temiz kod ve yüksek performans odaklı çözümler üretiyorum.",
         projects_btn: "Projelerimi İncele",
         cv_download: "CV'yi İndir"

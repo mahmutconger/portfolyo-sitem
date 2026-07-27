@@ -28,14 +28,7 @@ const Hero = () => {
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
 
-          {/* Status badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-700/60 text-zinc-400 text-xs font-medium mb-8">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            {t('hero.title')}
-          </div>
+          
 
           {/* Name */}
           <h1 className="text-5xl md:text-[68px] font-bold tracking-tight text-white mb-5 leading-[1.05]">
@@ -120,10 +113,6 @@ const Hero = () => {
               <code className="text-[11px] font-mono text-indigo-300">&lt;Android /&gt;</code>
             </div>
 
-            {/* Kotlin badge */}
-            <div className="absolute -top-3 -right-4 flex items-center gap-1.5 bg-zinc-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-700/60 text-[11px] font-semibold text-purple-300">
-              Kotlin <span className="text-purple-400">✦</span>
-            </div>
           </div>
         </div>
       </div>
