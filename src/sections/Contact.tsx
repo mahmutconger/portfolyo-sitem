@@ -157,7 +157,7 @@ const Contact = () => {
 
             {/* CV Download */}
             <a
-              href="/CV_TR.pdf"
+              href="/Mahmut_Can_CONGER_CV.pdf"
               download="Mahmut_Can_Conger_CV.pdf"
               onClick={() => trackEvent('cv_download', 'contact')}
               className="flex items-center gap-3 p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl hover:border-emerald-500/40 hover:bg-zinc-800 transition-all duration-200 group"

@@ -61,7 +61,7 @@ const Hero = () => {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </a>
             <a
-              href="/CV_TR.pdf"
+              href="/Mahmut_Can_CONGER_CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackEvent('cv_download', 'hero')}
