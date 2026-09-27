@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Mail,
   CheckCircle,
   Copy,
   Loader2,
-  Lock,
-  ArrowRight,
+  Send,
   Github,
   Linkedin,
   FileText,
   ExternalLink,
 } from "../components/ui/icons";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db, firebaseConfigured } from "../firebase";
 import emailjs from "@emailjs/browser";
 import { useTranslation } from "react-i18next";
@@ -19,24 +18,63 @@ import { useAnalytics } from "../hooks/useAnalytics";
 
 const PUBLIC_KEY = "NVd_00kA9C2KrM8gL";
 const SERVICE_ID = "service_qrqlzfe";
-const TEMPLATE_VERIFY = "template_ftdoyq1";
 const TEMPLATE_ADMIN = "template_xdwo66g";
+const COOLDOWN_KEY = "portfolio_contact_last_sent_at";
+const COOLDOWN_MS = 60_000;
+
+let lastSentInMemory = 0;
+
+function remainingSeconds() {
+  let lastSent = lastSentInMemory;
+  try {
+    lastSent = Math.max(lastSent, Number(localStorage.getItem(COOLDOWN_KEY)) || 0);
+  } catch {
+    // Depolama kapalıysa sınır geçerli sekme açık kaldığı sürece uygulanır.
+  }
+  return Math.ceil(Math.min(COOLDOWN_MS, Math.max(0, lastSent + COOLDOWN_MS - Date.now())) / 1000);
+}
+
+function markMessageSent() {
+  lastSentInMemory = Date.now();
+  try {
+    localStorage.setItem(COOLDOWN_KEY, String(lastSentInMemory));
+  } catch {
+    // Tarayıcı depolaması kapalı olsa da bellek içindeki sınır korunur.
+  }
+}
 
 const Contact = () => {
   const { t, i18n } = useTranslation();
   const tr = i18n.language.startsWith("tr");
   const { trackEvent } = useAnalytics();
-  const [step, setStep] = useState<"form" | "verify" | "success">("form");
+  const [step, setStep] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
-  const [generatedCode, setGeneratedCode] = useState("");
-  const [userCode, setUserCode] = useState("");
+  const [website, setWebsite] = useState("");
+  const [cooldown, setCooldown] = useState(remainingSeconds);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const sendingRef = useRef(false);
+
+  useEffect(() => {
+    const updateCooldown = () => setCooldown(remainingSeconds());
+    const timer = window.setInterval(updateCooldown, 1000);
+    window.addEventListener("storage", updateCooldown);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("storage", updateCooldown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (step !== "success") return;
+    const timer = window.setTimeout(() => setStep("form"), 5000);
+    return () => window.clearTimeout(timer);
+  }, [step]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,8 +94,19 @@ const Contact = () => {
     }
   };
 
-  const handleSendCode = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sendingRef.current) return;
+    if (website.trim()) {
+      setStep("success");
+      return;
+    }
+    const seconds = remainingSeconds();
+    if (seconds > 0) {
+      setCooldown(seconds);
+      setError(t("contact.rate_limit", { seconds }));
+      return;
+    }
     if (!firebaseConfigured) {
       setError(
         tr
@@ -66,75 +115,45 @@ const Contact = () => {
       );
       return;
     }
+    sendingRef.current = true;
     setLoading(true);
     setError("");
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedCode(code);
     try {
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_VERIFY,
-        {
-          to_name: formData.name,
-          to_email: formData.email,
-          code,
-        },
-        PUBLIC_KEY,
-      );
-      setLoading(false);
-      setStep("verify");
-    } catch {
-      setLoading(false);
-      setError(
-        tr
-          ? "Kod gönderilemedi. Lütfen tekrar deneyin."
-          : "Could not send the code. Please try again.",
-      );
-    }
-  };
-
-  const handleVerifyAndSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (userCode !== generatedCode) {
-      setError(
-        tr
-          ? "Doğrulama kodu eşleşmiyor. Lütfen kontrol edin."
-          : "The code does not match. Please check it.",
-      );
-      return;
-    }
-    setLoading(true);
-    try {
+      const message = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+      };
       await addDoc(collection(db, "messages"), {
-        ...formData,
-        createdAt: new Date(),
+        ...message,
+        createdAt: serverTimestamp(),
         isRead: false,
-        verified: true,
       });
-      const now = new Date();
-      await emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ADMIN,
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          time: `${now.toLocaleDateString("tr-TR")} ${now.toLocaleTimeString("tr-TR")}`,
-          to_email: "mahmutconger@gmail.com",
-        },
-        PUBLIC_KEY,
-      );
-      setLoading(false);
+      markMessageSent();
+      setCooldown(60);
       setStep("success");
       trackEvent("contact_submit");
       setFormData({ name: "", email: "", message: "" });
-      setTimeout(() => {
-        setStep("form");
-        setUserCode("");
-      }, 5000);
+      const now = new Date();
+      try {
+        await emailjs.send(
+          SERVICE_ID,
+          TEMPLATE_ADMIN,
+          {
+            ...message,
+            time: `${now.toLocaleDateString("tr-TR")} ${now.toLocaleTimeString("tr-TR")}`,
+            to_email: "mahmutconger@gmail.com",
+          },
+          PUBLIC_KEY,
+        );
+      } catch (notificationError) {
+        console.warn("Mesaj kaydedildi, e-posta bildirimi gönderilemedi:", notificationError);
+      }
     } catch {
+      setError(tr ? "Mesaj gönderilemedi. Lütfen tekrar deneyin." : "The message could not be sent. Please try again.");
+    } finally {
       setLoading(false);
-      setError(tr ? "Bir hata oluştu." : "Something went wrong.");
+      sendingRef.current = false;
     }
   };
 
@@ -277,12 +296,24 @@ const Contact = () => {
 
           {/* Mesaj formu */}
           <div className="lg:col-span-3 bg-zinc-800/40 border border-zinc-700/50 rounded-2xl p-6 md:p-8">
-            {/* Birinci adım: form */}
+            {/* Tek adımlı mesaj formu */}
             {step === "form" && (
               <form
-                onSubmit={handleSendCode}
+                onSubmit={handleSubmit}
                 className="space-y-5 animate-in fade-in slide-in-from-right-3 duration-300"
               >
+                <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input
+                    id="contact-website"
+                    name="website"
+                    type="text"
+                    value={website}
+                    onChange={(event) => setWebsite(event.target.value)}
+                    autoComplete="off"
+                    tabIndex={-1}
+                  />
+                </div>
                 <div className="grid md:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label
@@ -344,7 +375,7 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || cooldown > 0}
                   className="w-full bg-[#2C74B3] hover:bg-[#205295] disabled:opacity-60 text-white py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   {loading ? (
@@ -354,77 +385,18 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <Lock className="w-4 h-4" /> {t("contact.send_code")}
+                      <Send className="w-4 h-4" />
+                      {cooldown > 0
+                        ? t("contact.rate_limit", { seconds: cooldown })
+                        : t("contact.send")}
                     </>
                   )}
                 </button>
-
-                {error && (
-                  <p role="alert" className="text-red-400 text-xs text-center">
-                    {error}
+                {cooldown > 0 && (
+                  <p aria-live="polite" className="text-zinc-400 text-xs text-center">
+                    {t("contact.cooldown_notice")}
                   </p>
                 )}
-              </form>
-            )}
-
-            {/* İkinci adım: doğrulama */}
-            {step === "verify" && (
-              <form
-                onSubmit={handleVerifyAndSubmit}
-                className="space-y-6 text-center py-8 animate-in fade-in zoom-in-95 duration-200"
-              >
-                <div className="w-14 h-14 bg-[#2C74B3]/10 text-[#9BC7E8] rounded-2xl flex items-center justify-center mx-auto">
-                  <Mail className="w-7 h-7" />
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-bold text-white mb-2">
-                    {t("contact.verify_title")}
-                  </h4>
-                  <p className="text-zinc-400 text-sm">
-                    <span className="font-mono text-white">
-                      {formData.email}
-                    </span>{" "}
-                    {t("contact.verify_desc")}
-                  </p>
-                </div>
-
-                <input
-                  aria-label={tr ? "Doğrulama kodu" : "Verification code"}
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  value={userCode}
-                  onChange={(e) => setUserCode(e.target.value)}
-                  className="w-40 bg-zinc-950 border border-zinc-700 focus:border-[#2C74B3] focus:ring-1 focus:ring-[#2C74B3]/40 rounded-xl p-4 text-center text-2xl font-bold text-white tracking-widest outline-none mx-auto block transition-all"
-                  placeholder="000000"
-                  maxLength={6}
-                  autoFocus
-                />
-
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setStep("form")}
-                    className="flex-1 py-3 text-sm text-zinc-400 hover:text-white transition-colors"
-                  >
-                    {t("contact.back_btn")}
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-[2] bg-[#2C74B3] hover:bg-[#205295] text-white py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2"
-                  >
-                    {loading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        {t("contact.verify_btn")}{" "}
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </div>
-
                 {error && (
                   <p
                     role="alert"
@@ -436,7 +408,7 @@ const Contact = () => {
               </form>
             )}
 
-            {/* Üçüncü adım: başarı */}
+            {/* Başarılı gönderim */}
             {step === "success" && (
               <div className="flex flex-col items-center justify-center text-center py-16 animate-in fade-in zoom-in-95 duration-200">
                 <div className="w-14 h-14 bg-[#2C74B3] text-white rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-[#2C74B3]/20">

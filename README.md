@@ -38,4 +38,4 @@ Mevcut çeviriler `src/i18n.ts` içinde; fotoğraf ve CV dosyaları `public` iç
 
 Klavye odağı, içerik atlama bağlantısı, aktif bölüm bildirimi ve detaylarda Escape ile geri dönüş desteklenir. Sistem hareket azaltma tercihi, 3B hareketleri ve sürekli arka plan animasyonlarını azaltır. Yazı tipleri uygulamayla birlikte sunulur. Geliştirme ortamında analitik olayları Firebase'e gönderilmez.
 
-İletişim formu mevcut istemci tarafı EmailJS kod doğrulama yapısını korur. Bu akış sunucu tarafı kimlik doğrulama yerine geçmez. Gerçek e-posta gönderimi dış hizmetlerde yan etki oluşturduğundan yerel tasarım kontrollerinde otomatik olarak yapılmaz.
+İletişim formu e-posta kodu istemeden mesajı Firestore'a kaydeder ve ardından EmailJS ile yöneticiye bildirim gönderir. Aynı tarayıcıda başarılı gönderimden sonra 60 saniye bekleme ve otomatik doldurulan botları yakalamaya yönelik gizli bir alan vardır. Bu önlemler istemci tarafındadır; tarayıcı verisi temizlenerek aşılabilir. Gerçek sunucu tarafı hız sınırı için ayrı bir API ve merkezi kayıt gerekir. Yerel tasarım kontrolleri gerçek mesaj göndermez.

@@ -97,14 +97,12 @@ const resources = {
         form_name: "Full Name",
         form_email: "Email Address",
         form_msg: "Your Message",
-        send_code: "Send Verification Code",
-        sending: "Sending Code...",
-        verify_title: "Check Your Email",
-        verify_desc: "We sent a 6-digit code to",
-        verify_btn: "Verify and Send",
-        back_btn: "Back",
+        send: "Send Message",
+        sending: "Sending Message...",
+        rate_limit: "Try again in {{seconds}} seconds",
+        cooldown_notice: "You can send one message per minute from this browser.",
         success_title: "Message Sent!",
-        success_desc: "Verification successful. I will get back to you soon."
+        success_desc: "Thank you. I will get back to you soon."
       },
       footer: {
         cta: "Let's work together on your next project!",
@@ -249,14 +247,12 @@ const resources = {
         form_name: "İsim Soyisim",
         form_email: "Email Adresi",
         form_msg: "Mesajınız",
-        send_code: "Doğrulama Kodu Gönder",
-        sending: "Kod Gönderiliyor...",
-        verify_title: "Mailinizi Kontrol Edin",
-        verify_desc: "adresine 6 haneli bir kod gönderdik.",
-        verify_btn: "Onayla ve Gönder",
-        back_btn: "Geri Dön",
+        send: "Mesaj Gönder",
+        sending: "Mesaj Gönderiliyor...",
+        rate_limit: "{{seconds}} saniye sonra tekrar deneyin",
+        cooldown_notice: "Bu tarayıcıdan dakikada bir mesaj gönderebilirsiniz.",
         success_title: "Mesajınız İletildi!",
-        success_desc: "Doğrulama başarılı. En kısa sürede dönüş yapacağım."
+        success_desc: "Teşekkür ederim. En kısa sürede dönüş yapacağım."
       },
       footer: {
         cta: "Bir sonraki projenizde birlikte çalışalım!",
