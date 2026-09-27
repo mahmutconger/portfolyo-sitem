@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, ArrowRight, Download } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowRight, Download } from '../components/ui/icons';
 import { useTranslation } from 'react-i18next';
 import { useAnalytics } from '../hooks/useAnalytics';
 

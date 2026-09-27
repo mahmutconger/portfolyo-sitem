@@ -12,7 +12,7 @@ const AllProjects = () => {
       <Navbar /> {/* Menü her sayfada olsun */}
       
       {/* isFullList=true diyerek filtrelemeden hepsini istiyoruz */}
-      <Projects isFullList={true} />
+      <Projects />
       
       <Footer />
     </div>

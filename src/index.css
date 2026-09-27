@@ -2,23 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Webkit Scrollbar — zinc palette */
+html {
+  background: #0a2647;
+}
+
+/* Kaydırma çubuğu — mavi palet */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b; /* zinc-950 */
+  background: #0a2647;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46; /* zinc-700 */
+  background: #205295;
   border-radius: 4px;
-  border: 2px solid #09090b;
+  border: 2px solid #0a2647;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b; /* zinc-600 */
+  background: #2c74b3;
 }
 
-/* Modal scrollbar */
+/* Pencere kaydırma çubuğu */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
@@ -26,6 +30,6 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #205295;
   border-radius: 10px;
 }

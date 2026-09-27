@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Newspaper, Calendar, ArrowUpRight, BookOpen } from 'lucide-react';
+import { Newspaper, Calendar, ArrowUpRight, BookOpen } from '../components/ui/icons';
 import { useTranslation } from 'react-i18next';
 
 /* ─────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from './ui/icons';
 import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {

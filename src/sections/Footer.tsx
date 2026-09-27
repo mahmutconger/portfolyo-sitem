@@ -1,4 +1,4 @@
-import { Mail, Github, Linkedin, ChevronUp } from 'lucide-react';
+import { Mail, Github, Linkedin, ChevronUp } from '../components/ui/icons';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {

@@ -1,4 +1,4 @@
-import { Code2, Layout, Cpu, GitBranch } from 'lucide-react';
+import { Code2, Layout, Cpu, GitBranch } from '../components/ui/icons';
 import { useTranslation } from 'react-i18next';
 
 const technologies = [

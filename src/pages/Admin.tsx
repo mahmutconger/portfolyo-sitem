@@ -4,13 +4,13 @@ import { auth, db, storage } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import {
   collection, addDoc, updateDoc, deleteDoc,
-  doc, onSnapshot, query, orderBy,
+  doc, onSnapshot, query, orderBy, type Timestamp,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {
   Plus, Trash2, LogOut, Edit2, Star, MessageSquare,
   Upload, Loader2, X, Mail, Calendar, Globe, Activity,
-} from 'lucide-react';
+} from '../components/ui/icons';
 import AnalyticsTab from '../components/AnalyticsTab';
 
 // ---------------------------------------------------------------------------
@@ -42,8 +42,8 @@ interface ProjectData {
   liveUrl: string;         // language-independent
   linkedinUrl: string;     // language-independent
   isFeatured: boolean;
-  createdAt?: any;
-  updatedAt?: any;
+  createdAt?: Date | Timestamp;
+  updatedAt?: Date | Timestamp;
 }
 
 interface MessageData {
@@ -67,7 +67,6 @@ const PREDEFINED_TAGS = [
 type ContentLang = 'tr' | 'en';
 
 const EMPTY_BILINGUAL_TEXT: BilingualText = { tr: '', en: '' };
-const EMPTY_BILINGUAL_LIST: BilingualList = { tr: [], en: [] };
 
 const EMPTY_FORM: Omit<ProjectData, 'id' | 'createdAt' | 'updatedAt'> = {
   title: { ...EMPTY_BILINGUAL_TEXT },
@@ -146,7 +145,7 @@ const Admin: React.FC = () => {
   // Helpers
   // ---------------------------------------------------------------------------
   const handleLogout = () => {
-    auth.signOut();
+    auth?.signOut();
     navigate('/login');
   };
 
@@ -337,7 +336,7 @@ const handleEdit = (project: ProjectData) => {
       };
 
       if (editingId) {
-        await updateDoc(doc(db, 'projects', editingId), projectData as any);
+        await updateDoc(doc(db, 'projects', editingId), projectData);
         alert(t('admin.form.validation.updated'));
         setEditingId(null);
       } else {

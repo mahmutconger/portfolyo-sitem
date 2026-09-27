@@ -8,7 +8,7 @@ import {
   Eye, Users, Clock, Download, MousePointerClick,
   TrendingUp, Monitor, Smartphone, Globe2, RefreshCw,
   Activity, FileText, Github, Linkedin, Mail, ExternalLink,
-} from 'lucide-react';
+} from './ui/icons';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface RawEvent {
@@ -193,8 +193,8 @@ const AnalyticsTab: React.FC = () => {
   );
 
   // Günlük ziyaretçi (son 14 gün)
-  const last14Days = getLast14Days();
   const dailyData = useMemo(() => {
+    const last14Days = getLast14Days();
     return last14Days.map((dayLabel) => {
       const count = events.filter((e) => {
         if (e.type !== 'page_view' || !e.timestamp) return false;

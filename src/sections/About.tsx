@@ -1,4 +1,4 @@
-import { GitBranch, Users, BookOpen, GraduationCap, Award, ArrowRight } from 'lucide-react';
+import { GitBranch, Users, BookOpen, GraduationCap, Award, ArrowRight } from '../components/ui/icons';
 import { useTranslation } from 'react-i18next';
 
 const certificates = [

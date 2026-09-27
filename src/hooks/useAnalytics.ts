@@ -1,34 +1,39 @@
-import { useEffect, useRef } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { useEffect, useRef } from "react";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  type FieldValue,
+} from "firebase/firestore";
+import { db, firebaseConfigured } from "../firebase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export type EventType =
-  | 'page_view'
-  | 'section_view'
-  | 'cv_download'
-  | 'project_click'
-  | 'social_click'
-  | 'contact_submit'
-  | 'page_duration';
+  | "page_view"
+  | "section_view"
+  | "cv_download"
+  | "project_click"
+  | "social_click"
+  | "contact_submit"
+  | "page_duration";
 
 export interface AnalyticsEvent {
   type: EventType;
   page: string;
-  target?: string;       // bölüm adı, proje başlığı, sosyal platform vb.
+  target?: string; // bölüm adı, proje başlığı, sosyal platform vb.
   sessionId: string;
   referrer: string;
-  device: 'mobile' | 'desktop';
+  device: "mobile" | "desktop";
   language: string;
-  timestamp: any;        // serverTimestamp
-  duration?: number;     // ms – sadece page_duration event'inde
+  timestamp: FieldValue; // serverTimestamp
+  duration?: number; // ms – sadece page_duration event'inde
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /** Oturum başına benzersiz ID — tarayıcı kapanınca sıfırlanır */
 function getOrCreateSessionId(): string {
-  const KEY = 'portfolio_session_id';
+  const KEY = "portfolio_session_id";
   let id = sessionStorage.getItem(KEY);
   if (!id) {
     id = crypto.randomUUID
@@ -39,16 +44,19 @@ function getOrCreateSessionId(): string {
   return id;
 }
 
-function getDevice(): 'mobile' | 'desktop' {
-  return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+function getDevice(): "mobile" | "desktop" {
+  return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+    ? "mobile"
+    : "desktop";
 }
 
 /** Firestore'a güvenli yaz — hata olursa console'a log at, UI'ı kırma */
-async function writeEvent(payload: Omit<AnalyticsEvent, 'timestamp'> & { timestamp: any }) {
+async function writeEvent(payload: AnalyticsEvent) {
+  if (!firebaseConfigured || import.meta.env.DEV) return;
   try {
-    await addDoc(collection(db, 'analytics_events'), payload);
+    await addDoc(collection(db, "analytics_events"), payload);
   } catch (err) {
-    console.warn('[Analytics] Event yazılamadı:', err);
+    console.warn("[Analytics] Event yazılamadı:", err);
   }
 }
 
@@ -65,21 +73,19 @@ async function writeEvent(payload: Omit<AnalyticsEvent, 'timestamp'> & { timesta
  * @param autoPageView  true ise mount anında 'page_view' otomatik gönderilir.
  * @param autoPageDuration  true ise unmount'ta 'page_duration' gönderilir.
  */
-export function useAnalytics(
-  autoPageView = false,
-  autoPageDuration = false,
-) {
+export function useAnalytics(autoPageView = false, autoPageDuration = false) {
   const sessionId = getOrCreateSessionId();
   const pageStart = useRef<number>(Date.now());
-  const language = typeof localStorage !== 'undefined'
-    ? (localStorage.getItem('i18nextLng') ?? 'tr')
-    : 'tr';
+  const language =
+    typeof localStorage !== "undefined"
+      ? (localStorage.getItem("appLang") ?? "tr")
+      : "tr";
 
   const trackEvent = (type: EventType, target?: string) => {
     const payload: AnalyticsEvent = {
       type,
       page: window.location.pathname,
-      target: target ?? undefined,
+      ...(target ? { target } : {}),
       sessionId,
       referrer: document.referrer,
       device: getDevice(),
@@ -91,7 +97,7 @@ export function useAnalytics(
 
   useEffect(() => {
     if (autoPageView) {
-      trackEvent('page_view');
+      trackEvent("page_view");
     }
 
     if (autoPageDuration) {
@@ -101,7 +107,7 @@ export function useAnalytics(
         // Sadece 3 saniyeden uzun ziyaretleri kaydet (bot filtreleme)
         if (duration > 3000) {
           writeEvent({
-            type: 'page_duration',
+            type: "page_duration",
             page: window.location.pathname,
             sessionId,
             referrer: document.referrer,
@@ -140,7 +146,7 @@ export function useSectionTracking(sectionIds: string[]) {
           const id = entry.target.id;
           if (entry.isIntersecting && !reported.current.has(id)) {
             reported.current.add(id);
-            trackEvent('section_view', id);
+            trackEvent("section_view", id);
           }
         });
       },
