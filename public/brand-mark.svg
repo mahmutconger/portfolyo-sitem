@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Mahmut Can Çönger — mc.</title>
+  <rect width="128" height="128" rx="29" fill="#0A2647"/>
+  <rect x="2" y="2" width="124" height="124" rx="27" fill="none" stroke="#2C74B3" stroke-opacity=".55" stroke-width="2"/>
+  <text x="13" y="83" fill="#EEF0F7" font-family="Manrope, Arial, sans-serif" font-size="69" font-weight="800" letter-spacing="-8">m</text>
+  <text x="81" y="83" fill="#A3D0EF" font-family="Manrope, Arial, sans-serif" font-size="69" font-weight="800" letter-spacing="-6">c</text>
+  <circle cx="112" cy="90" r="5" fill="#2C74B3"/>
+</svg>
