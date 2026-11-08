@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-label="Mahmut Can Çönger">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#144272"/>
+      <stop offset="0.55" stop-color="#0a2647"/>
+      <stop offset="1" stop-color="#205295"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.72" cy="0.28" r="0.6">
+      <stop offset="0" stop-color="#2c74b3" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#2c74b3" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0V60" fill="none" stroke="#ffffff" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <rect width="1200" height="750" fill="url(#glow)"/>
+  <rect width="1200" height="750" fill="url(#grid)"/>
+  <circle cx="600" cy="375" r="190" fill="none" stroke="#a3d0ef" stroke-opacity="0.18"/>
+  <circle cx="600" cy="375" r="250" fill="none" stroke="#a3d0ef" stroke-opacity="0.1" stroke-dasharray="6 10"/>
+  <text x="600" y="420" text-anchor="middle" font-family="Georgia, serif" font-size="150" fill="#d1e8fa" fill-opacity="0.9" letter-spacing="-6">m<tspan fill="#79b7e7">c</tspan></text>
+</svg>

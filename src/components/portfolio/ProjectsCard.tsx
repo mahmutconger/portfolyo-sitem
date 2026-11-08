@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,112 +10,110 @@ import {
   ChevronRight,
   Github,
   Layers3,
+  Linkedin,
+  Smartphone,
+  Globe,
+  type PortfolioIcon,
 } from "../ui/icons";
-import { useTranslation } from "react-i18next";
-import { db, firebaseConfigured } from "../../firebase";
 import { useAnalytics } from "../../hooks/useAnalytics";
-import { EmptyState, LoadingCards, SectionHeading } from "./shared";
+import { useLanguage } from "../../hooks/useLanguage";
+import { useProjects, type ProjectWithMedia } from "../../hooks/useProjects";
+import { formatPeriod } from "../../content/format";
+import { projectHref } from "../../content/sections";
+import type { Language, ProjectLinkKind } from "../../content/types";
+import { SectionHeading } from "./shared";
 import { stagger } from "./motion";
+import ProjectImage from "./ProjectImage";
 
-type Localized = string | Record<string, string>;
-interface Project {
-  id: string;
-  title: Localized;
-  description: Localized;
-  longDescription: Localized;
-  image: string;
-  gallery?: string[];
-  tags?: string[];
-  features?: string[] | Record<string, string[]>;
-  githubUrl?: string;
-  liveUrl?: string;
-  linkedinUrl?: string;
-  isFeatured?: boolean;
-  createdAt?: { seconds: number };
+const linkIcons: Record<ProjectLinkKind, PortfolioIcon> = {
+  website: Globe,
+  googlePlay: Smartphone,
+  source: Github,
+  linkedin: Linkedin,
+};
+
+function ProjectMeta({
+  project,
+  language,
+}: {
+  project: ProjectWithMedia;
+  language: Language;
+}) {
+  const { t } = useTranslation();
+  return (
+    <span className="project-meta mono">
+      <span className="project-kind">{t(`projects.kind.${project.kind}`)}</span>
+      <i />
+      {formatPeriod(project.period, language)}
+    </span>
+  );
 }
-let cachedProjects: Project[] | undefined;
+
+function ProjectStatus({
+  project,
+  language,
+}: {
+  project: ProjectWithMedia;
+  language: Language;
+}) {
+  const { t } = useTranslation();
+  return (
+    <p className="project-status">
+      <span className="status-light" aria-hidden="true" />
+      <span className="sr-only">{t("projects.status")}: </span>
+      {project.status[language]}
+    </p>
+  );
+}
+
 export default function ProjectsCard() {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
-  const local = (value?: Localized) =>
-    typeof value === "string"
-      ? value
-      : value?.[tr ? "tr" : "en"] || value?.tr || value?.en || "";
-  const [projects, setProjects] = useState<Project[]>(cachedProjects || []);
-  const [status, setStatus] = useState(cachedProjects ? "ok" : "loading");
-  const [retry, setRetry] = useState(0);
+  const { t } = useTranslation();
+  const language = useLanguage();
+  const projects = useProjects();
+  const { trackEvent } = useAnalytics();
+  const { search } = useLocation();
+  const navigate = useNavigate();
   const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<Project | null>(null);
   const [all, setAll] = useState(false);
   const [slide, setSlide] = useState(0);
-  const { trackEvent } = useAnalytics();
   const detailHeading = useRef<HTMLHeadingElement>(null);
-  const opener = useRef<HTMLButtonElement | null>(null);
-  useEffect(() => {
-    if (cachedProjects) return;
-    let active = true;
-    const timer = window.setTimeout(() => {
-      if (active) setStatus("error");
-    }, 12000);
-    (async () => {
-      try {
-        if (!firebaseConfigured)
-          throw new Error("Firebase yapılandırması eksik");
-        const result = await getDocs(collection(db, "projects"));
-        const data = result.docs
-          .map((doc) => ({ ...doc.data(), id: doc.id }) as Project)
-          .sort(
-            (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0),
-          );
-        if (active) {
-          cachedProjects = data;
-          setProjects(data);
-          setStatus("ok");
-        }
-      } catch {
-        if (active) setStatus("error");
-      } finally {
-        window.clearTimeout(timer);
-      }
-    })();
-    return () => {
-      active = false;
-      window.clearTimeout(timer);
-    };
-  }, [retry]);
-  const close = () => {
-    setSelected(null);
-    window.setTimeout(() => opener.current?.focus(), 60);
-  };
+  const opener = useRef<HTMLElement | null>(null);
+
+  const selectedId = new URLSearchParams(search).get("project");
+  const selected = projects.find((project) => project.id === selectedId) ?? null;
+  const current = projects[index % Math.max(1, projects.length)];
+
+  function open(project: ProjectWithMedia, trigger: HTMLElement) {
+    opener.current = trigger;
+    setSlide(0);
+    trackEvent("project_click", project.title.en);
+    navigate(projectHref(project.id));
+  }
+
   useEffect(() => {
     if (!selected) return;
     detailHeading.current?.focus();
-    const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setSelected(null);
-        window.setTimeout(() => opener.current?.focus(), 60);
-      }
+    const close = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      navigate("/#projects", { replace: true });
+      window.setTimeout(() => opener.current?.focus(), 60);
     };
-    document.addEventListener("keydown", key);
-    return () => document.removeEventListener("keydown", key);
-  }, [selected]);
-  function open(project: Project, button: HTMLButtonElement) {
-    opener.current = button;
-    setSlide(0);
-    setSelected(project);
-    trackEvent("project_click", local(project.title));
-  }
-  const featured = projects.filter((p) => p.isFeatured);
-  const showcase = featured.length ? featured : projects;
-  const current = showcase[index % Math.max(1, showcase.length)];
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [selected, navigate]);
+
+  const closeDetail = () => {
+    navigate("/#projects");
+    window.setTimeout(() => opener.current?.focus(), 60);
+  };
+
   const gallery = selected
-    ? (selected.gallery?.length ? selected.gallery : [selected.image]).filter(
-        Boolean,
-      )
+    ? selected.media.gallery.length
+      ? selected.media.gallery
+      : [selected.media.image]
     : [];
-  const features = Array.isArray(selected?.features)
-    ? selected.features
-    : selected?.features?.[tr ? "tr" : "en"] || selected?.features?.tr || [];
+  const title = (project: ProjectWithMedia) => project.title[language];
+
   return (
     <motion.div
       className="section-content projects-content"
@@ -124,54 +123,17 @@ export default function ProjectsCard() {
     >
       <div hidden={!!selected}>
         <SectionHeading
-          number="04"
-          eyebrow={tr ? "SEÇİLMİŞ ÇALIŞMALAR" : "SELECTED WORK"}
+          section="projects"
+          eyebrow={t("projects.eyebrow")}
           title={
             <>
-              {tr ? "Fikirler, " : "Ideas, "}
-              <em>{tr ? "hayata geçti." : "brought to life."}</em>
+              {t("projects.title_a")}
+              <em>{t("projects.title_b")}</em>
             </>
           }
-          description={t("projects.featured_desc")}
+          description={t("projects.description")}
         />
-        {status === "loading" && <LoadingCards />}
-        {status === "error" && (
-          <EmptyState
-            title={
-              tr
-                ? "Projeler şu anda yüklenemedi."
-                : "Projects couldn’t be loaded."
-            }
-            onRetry={() => {
-              setStatus("loading");
-              setRetry((v) => v + 1);
-            }}
-          >
-            <p>
-              {tr
-                ? "Çalışmaları GitHub üzerinden de inceleyebilirsin."
-                : "You can also explore my work on GitHub."}
-            </p>
-            <a
-              className="text-link"
-              href="https://github.com/mahmutconger"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub <ArrowUpRight size={16} />
-            </a>
-          </EmptyState>
-        )}
-        {status === "ok" && !projects.length && (
-          <EmptyState
-            title={
-              tr
-                ? "Yeni projeler için yer açılıyor."
-                : "Making room for new projects."
-            }
-          />
-        )}
-        {status === "ok" && current && (
+        {current && (
           <>
             <div className="project-showcase">
               <div className="project-stack">
@@ -186,9 +148,9 @@ export default function ProjectsCard() {
                     exit={{ opacity: 0, rotate: 5, x: 20 }}
                     transition={{ duration: 0.25 }}
                     onClick={(e) => open(current, e.currentTarget)}
-                    aria-label={`${local(current.title)} — ${t("projects.inspect")}`}
+                    aria-label={`${title(current)} — ${t("projects.inspect")}`}
                   >
-                    <img src={current.image} alt={local(current.title)} />
+                    <ProjectImage src={current.media.image} alt={title(current)} />
                     <span className="cover-open">
                       <ArrowUpRight size={20} />
                     </span>
@@ -196,8 +158,8 @@ export default function ProjectsCard() {
                 </AnimatePresence>
                 <span className="project-image-caption mono">
                   {String(index + 1).padStart(2, "0")} /{" "}
-                  {String(showcase.length).padStart(2, "0")}{" "}
-                  <span>{tr ? "FİKİRDEN UYGULAMAYA" : "FROM IDEA TO APP"}</span>
+                  {String(projects.length).padStart(2, "0")}{" "}
+                  <span>{t("projects.from_idea")}</span>
                 </span>
               </div>
               <AnimatePresence mode="wait">
@@ -207,17 +169,18 @@ export default function ProjectsCard() {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
+                  data-testid="project-summary"
                 >
                   <span className="eyebrow">
                     <Layers3 size={14} />
-                    {t("projects.featured_badge")}
+                    <ProjectMeta project={current} language={language} />
                   </span>
-                  <h2 title={local(current.title)}>
-                    {local(current.title).split(":")[0]}
-                  </h2>
-                  <p>{local(current.description)}</p>
+                  <h2>{title(current)}</h2>
+                  <p className="project-tagline">{current.tagline[language]}</p>
+                  <p>{current.summary[language]}</p>
+                  <ProjectStatus project={current} language={language} />
                   <div className="tags">
-                    {current.tags?.slice(0, 4).map((tag) => (
+                    {current.tags.slice(0, 4).map((tag) => (
                       <span key={tag}>{tag}</span>
                     ))}
                   </div>
@@ -225,7 +188,7 @@ export default function ProjectsCard() {
                     className="button primary"
                     onClick={(e) => open(current, e.currentTarget)}
                   >
-                    {tr ? "Projeyi keşfet" : "Explore project"}
+                    {t("projects.explore")}
                     <ArrowUpRight size={17} />
                   </button>
                 </motion.div>
@@ -235,23 +198,23 @@ export default function ProjectsCard() {
               <div className="project-pagination">
                 <button
                   className="icon-button"
-                  aria-label={tr ? "Önceki proje" : "Previous project"}
-                  disabled={showcase.length < 2}
+                  aria-label={t("projects.previous")}
+                  disabled={projects.length < 2}
                   onClick={() =>
-                    setIndex((index - 1 + showcase.length) % showcase.length)
+                    setIndex((index - 1 + projects.length) % projects.length)
                   }
                 >
                   <ChevronLeft size={18} />
                 </button>
                 <span className="mono">
                   {String(index + 1).padStart(2, "0")}{" "}
-                  <span>/ {String(showcase.length).padStart(2, "0")}</span>
+                  <span>/ {String(projects.length).padStart(2, "0")}</span>
                 </span>
                 <button
                   className="icon-button"
-                  aria-label={tr ? "Sonraki proje" : "Next project"}
-                  disabled={showcase.length < 2}
-                  onClick={() => setIndex((index + 1) % showcase.length)}
+                  aria-label={t("projects.next")}
+                  disabled={projects.length < 2}
+                  onClick={() => setIndex((index + 1) % projects.length)}
                 >
                   <ChevronRight size={18} />
                 </button>
@@ -261,11 +224,7 @@ export default function ProjectsCard() {
                 aria-expanded={all}
                 onClick={() => setAll(!all)}
               >
-                {all
-                  ? tr
-                    ? "Listeyi gizle"
-                    : "Hide list"
-                  : t("projects.view_all")}
+                {all ? t("projects.hide_list") : t("projects.view_all")}
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -275,14 +234,17 @@ export default function ProjectsCard() {
                   <button
                     className="project-small glass-tile"
                     key={project.id}
+                    data-testid={`project-tile-${project.id}`}
                     onClick={(e) => open(project, e.currentTarget)}
                   >
-                    <img src={project.image} alt="" loading="lazy" />
+                    <ProjectImage src={project.media.image} alt="" loading="lazy" />
+                    <ProjectMeta project={project} language={language} />
                     <h3>
-                      {local(project.title)}
+                      {title(project)}
                       <ArrowUpRight size={16} />
                     </h3>
-                    <p>{local(project.description)}</p>
+                    <p>{project.tagline[language]}</p>
+                    <ProjectStatus project={project} language={language} />
                   </button>
                 ))}
               </div>
@@ -293,105 +255,92 @@ export default function ProjectsCard() {
       {selected && (
         <motion.article
           className="project-detail"
+          data-testid={`project-detail-${selected.id}`}
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <button className="text-link back-link" onClick={close}>
+          <button className="text-link back-link" onClick={closeDetail}>
             <ArrowLeft size={17} />
-            {tr ? "Projelere dön" : "Back to projects"}
+            {t("projects.back")}
           </button>
+          <ProjectMeta project={selected} language={language} />
           <h1 tabIndex={-1} ref={detailHeading}>
-            {local(selected.title)}
+            {title(selected)}
           </h1>
+          <p className="project-tagline">{selected.tagline[language]}</p>
+          <ProjectStatus project={selected} language={language} />
           <div className="tags">
-            {selected.tags?.map((tag) => (
+            {selected.tags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
           </div>
-          {gallery.length > 0 && (
-            <div className="project-gallery">
-              <img
-                src={gallery[slide]}
-                alt={`${local(selected.title)} — ${slide + 1}`}
-              />
-              {gallery.length > 1 && (
-                <div className="gallery-controls">
-                  <button
-                    className="icon-button"
-                    aria-label={tr ? "Önceki görsel" : "Previous image"}
-                    onClick={() =>
-                      setSlide((slide - 1 + gallery.length) % gallery.length)
-                    }
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <span className="mono">
-                    {slide + 1} / {gallery.length}
-                  </span>
-                  <button
-                    className="icon-button"
-                    aria-label={tr ? "Sonraki görsel" : "Next image"}
-                    onClick={() => setSlide((slide + 1) % gallery.length)}
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+          <div className="project-gallery">
+            <ProjectImage
+              src={gallery[slide]}
+              alt={`${title(selected)} — ${slide + 1}`}
+            />
+            {gallery.length > 1 && (
+              <div className="gallery-controls">
+                <button
+                  className="icon-button"
+                  aria-label={t("projects.previous_image")}
+                  onClick={() =>
+                    setSlide((slide - 1 + gallery.length) % gallery.length)
+                  }
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <span className="mono">
+                  {slide + 1} / {gallery.length}
+                </span>
+                <button
+                  className="icon-button"
+                  aria-label={t("projects.next_image")}
+                  onClick={() => setSlide((slide + 1) % gallery.length)}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
+          </div>
           <div className="project-story">
             <div>
               <h2>{t("projects.story")}</h2>
-              <p>
-                {local(selected.longDescription) || local(selected.description)}
-              </p>
+              <p className="project-summary-lead">{selected.summary[language]}</p>
+              {selected.story[language].map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
             </div>
-            {features.length > 0 && (
-              <aside className="glass-tile">
-                <h2>{t("projects.features")}</h2>
-                <ul>
-                  {features.map((feature, i) => (
-                    <li key={i}>{feature}</li>
-                  ))}
-                </ul>
-              </aside>
-            )}
+            <aside className="glass-tile">
+              <h2>{t("projects.highlights")}</h2>
+              <ul>
+                {selected.highlights[language].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </aside>
           </div>
-          <div className="detail-links">
-            {selected.githubUrl && (
-              <a
-                className="button secondary"
-                href={selected.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github size={16} />
-                {t("projects.source_code")}
-              </a>
-            )}
-            {selected.liveUrl && (
-              <a
-                className="button primary"
-                href={selected.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t("projects.demo")}
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-            {selected.linkedinUrl && (
-              <a
-                className="button secondary"
-                href={selected.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LinkedIn
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-          </div>
+          {selected.links.length > 0 && (
+            <div className="detail-links">
+              {selected.links.map((link, i) => {
+                const Icon = linkIcons[link.kind];
+                return (
+                  <a
+                    key={link.url}
+                    className={`button ${i === 0 ? "primary" : "secondary"}`}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-link-kind={link.kind}
+                  >
+                    <Icon size={16} />
+                    {t(`projects.links.${link.kind}`)}
+                    <ArrowUpRight size={16} />
+                  </a>
+                );
+              })}
+            </div>
+          )}
         </motion.article>
       )}
     </motion.div>

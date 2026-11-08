@@ -3,21 +3,41 @@ import {
   BookOpen,
   Code2,
   Cpu,
-  GitBranch,
   GraduationCap,
   Layers3,
+  RefreshCw,
   Users,
-  ArrowUpRight,
+  type PortfolioIcon,
 } from "../ui/icons";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { SectionHeading } from "./shared";
 import { reveal, stagger } from "./motion";
-import { technologies } from "./technologies";
+import { useLanguage } from "../../hooks/useLanguage";
+import {
+  aboutBio,
+  competencies,
+  education,
+  workPrinciples,
+} from "../../content/about";
+import { approach, skillGroups } from "../../content/skills";
+import { profile } from "../../content/profile";
+
+const principleIcons: Record<string, PortfolioIcon> = {
+  team: Users,
+  passion: BookOpen,
+};
+
+const approachIcons: Record<string, PortfolioIcon> = {
+  clean: Layers3,
+  compose: Code2,
+  async: Cpu,
+  offline: RefreshCw,
+};
 
 export function AboutCard() {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
+  const { t } = useTranslation();
+  const language = useLanguage();
   return (
     <motion.div
       className="section-content about-content"
@@ -26,7 +46,7 @@ export function AboutCard() {
       animate="show"
     >
       <SectionHeading
-        number="02"
+        section="about"
         eyebrow={t("about.profile")}
         title={
           <>
@@ -39,11 +59,11 @@ export function AboutCard() {
       <div className="about-grid">
         <motion.div variants={reveal} className="glass-tile about-bio">
           <div className="about-avatar">
-            <img src="/profile.jpg" alt="Mahmut Can Çönger" />
+            <img src="/profile.jpg" alt={profile.name} />
             <span className="status-light" />
           </div>
-          <p>{t("about.description")}</p>
-          <span className="signature mini-signature">Mahmut Can Çönger</span>
+          <p>{aboutBio[language]}</p>
+          <span className="signature mini-signature">{profile.name}</span>
         </motion.div>
         <motion.div variants={reveal} className="glass-tile education">
           <div className="tile-label">
@@ -51,57 +71,39 @@ export function AboutCard() {
             {t("about.edu_title")}
           </div>
           <div className="timeline">
-            {[
-              {
-                years: "2023 — 2027",
-                title: "uni",
-                place: "Manisa Celal Bayar Üniversitesi",
-              },
-              {
-                years: "2019 — 2023",
-                title: "high",
-                place: "Sivas Bilişim Tek. Lisesi",
-              },
-            ].map((item) => (
-              <div className="timeline-item" key={item.title}>
+            {education.map((item) => (
+              <div className="timeline-item" key={item.id}>
                 <span className="mono">{item.years}</span>
-                <h3>{t(`about.${item.title}`)}</h3>
+                <h3>{item.title[language]}</h3>
                 <small>{item.place}</small>
-                <p>{t(`about.${item.title}_desc`)}</p>
+                <p>{item.description[language]}</p>
               </div>
             ))}
           </div>
         </motion.div>
-        {[
-          { id: "git", Icon: GitBranch },
-          { id: "team", Icon: Users },
-          { id: "passion", Icon: BookOpen },
-        ].map(({ id, Icon }) => (
-          <motion.div
-            variants={reveal}
-            whileHover={{ y: -5 }}
-            className="glass-tile principle"
-            key={id}
-          >
-            <Icon size={22} />
-            <h3>{t(`about.${id}_title`)}</h3>
-            <p>{t(`about.${id}_desc`)}</p>
-          </motion.div>
-        ))}
+        {workPrinciples.map(({ id, title, description }) => {
+          const Icon = principleIcons[id] ?? Layers3;
+          return (
+            <motion.div
+              variants={reveal}
+              whileHover={{ y: -5 }}
+              className="glass-tile principle"
+              key={id}
+            >
+              <Icon size={22} />
+              <h3>{title[language]}</h3>
+              <p>{description[language]}</p>
+            </motion.div>
+          );
+        })}
         <motion.div variants={reveal} className="certificates">
           <span>
             <Award size={17} />
-            {t("about.certs_title")}
+            {t("about.competencies_title")}
           </span>
           <div className="tags">
-            {[
-              "Git & GitHub (Advanced)",
-              "Jetpack Compose UI",
-              "Firebase Backend",
-              tr ? "İleri Seviye Kotlin" : "Advanced Kotlin",
-              tr ? "Versiyon Kontrol Sistemleri" : "Version Control Systems",
-            ].map((cert) => (
-              <span key={cert}>{cert}</span>
+            {competencies[language].map((item) => (
+              <span key={item}>{item}</span>
             ))}
           </div>
         </motion.div>
@@ -111,8 +113,8 @@ export function AboutCard() {
 }
 
 export function SkillsCard() {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
+  const { t } = useTranslation();
+  const language = useLanguage();
   return (
     <motion.div
       className="section-content skills-content"
@@ -121,61 +123,55 @@ export function SkillsCard() {
       animate="show"
     >
       <SectionHeading
-        number="03"
-        eyebrow={tr ? "ARAÇLAR & YAKLAŞIM" : "TOOLS & APPROACH"}
+        section="tech"
+        eyebrow={t("tech.eyebrow")}
         title={
           <>
-            {tr ? "Doğru araçlar." : "The right tools."}
+            {t("tech.title_a")}
             <br />
-            <em>{tr ? "Sağlam temeller." : "Solid foundations."}</em>
+            <em>{t("tech.title_b")}</em>
           </>
         }
         description={t("tech.subtitle")}
       />
-      <div className="technology-grid">
-        {technologies.map(({ id, name, category, en }, index) => (
-          <motion.div
-            key={name}
+      <div className="skill-groups">
+        {skillGroups.map(({ id, title, items }, index) => (
+          <motion.section
+            key={id}
             variants={{
-              hidden: { opacity: 0, scale: 0.85, rotateX: 15 },
+              hidden: { opacity: 0, scale: 0.92, rotateX: 15 },
               show: { opacity: 1, scale: 1, rotateX: 0 },
             }}
-            whileHover={{ y: -6, backgroundColor: "#ffffff0d" }}
-            className="technology-tile"
+            className={`technology-tile skill-group skill-group-${id}`}
+            aria-labelledby={`skill-group-${id}`}
           >
             <span className="technology-number mono">0{index + 1}</span>
-            <span
-              className="technology-icon"
-            >
-              <img src={`/tech-logos/${id}.svg`} alt="" loading="lazy" />
-            </span>
-            <h3>{name}</h3>
-            <p>{tr ? category : en}</p>
-            <ArrowUpRight className="technology-arrow" size={16} />
-          </motion.div>
+            <h3 id={`skill-group-${id}`}>{title[language]}</h3>
+            <ul className="tags">
+              {items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </motion.section>
         ))}
       </div>
       <motion.div variants={reveal} className="principles-heading">
-        <span className="eyebrow">
-          {tr ? "KODUN ARKASINDAKİ YAKLAŞIM" : "THE APPROACH BEHIND THE CODE"}
-        </span>
+        <span className="eyebrow">{t("tech.approach")}</span>
         <span className="line" />
       </motion.div>
       <div className="skill-principles">
-        {[
-          { id: "clean", Icon: Layers3 },
-          { id: "compose", Icon: Code2 },
-          { id: "async", Icon: Cpu },
-          { id: "atomic", Icon: GitBranch },
-        ].map(({ id, Icon }) => (
-          <motion.div variants={reveal} className="skill-principle" key={id}>
-            <Icon size={18} />
-            <div>
-              <h3>{t(`tech.${id}_title`)}</h3>
-              <p>{t(`tech.${id}_desc`)}</p>
-            </div>
-          </motion.div>
-        ))}
+        {approach.map(({ id, title, description }) => {
+          const Icon = approachIcons[id] ?? Layers3;
+          return (
+            <motion.div variants={reveal} className="skill-principle" key={id}>
+              <Icon size={18} />
+              <div>
+                <h3>{title[language]}</h3>
+                <p>{description[language]}</p>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   );

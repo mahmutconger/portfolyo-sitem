@@ -5,24 +5,16 @@ import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 import { EmptyState, LoadingCards, SectionHeading } from "./shared";
 import { stagger } from "./motion";
+import { useLanguage } from "../../hooks/useLanguage";
+import { profile } from "../../content/profile";
+import { fetchArticles, type Article } from "../../services/portfolioRepository";
 
-interface Article {
-  title: string;
-  link: string;
-  pubDate: string;
-  thumbnail?: string;
-  description?: string;
-  content?: string;
-}
-const feed =
-  "https://api.rss2json.com/v1/api.json?rss_url=" +
-  encodeURIComponent("https://medium.com/feed/@mahmutconger");
 let cachedArticles: Article[] | undefined;
 const plainText = (html: string) =>
   new DOMParser().parseFromString(html, "text/html").body.textContent || "";
 export default function ArticlesCard() {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
+  const { t } = useTranslation();
+  const language = useLanguage();
   const [articles, setArticles] = useState<Article[]>(cachedArticles || []);
   const [status, setStatus] = useState(cachedArticles ? "ok" : "loading");
   const [retry, setRetry] = useState(0);
@@ -36,14 +28,10 @@ export default function ArticlesCard() {
     const timeout = window.setTimeout(() => controller.abort(), 12000);
     (async () => {
       try {
-        const response = await fetch(feed, { signal: controller.signal });
-        if (!response.ok) throw new Error("Makaleler alınamadı");
-        const result = await response.json();
-        if (result.status !== "ok" || !Array.isArray(result.items))
-          throw new Error("Geçersiz makale verisi");
+        const items = await fetchArticles(controller.signal);
         if (active) {
-          cachedArticles = result.items;
-          setArticles(result.items);
+          cachedArticles = items;
+          setArticles(items);
           setStatus("ok");
         }
       } catch {
@@ -78,7 +66,7 @@ export default function ArticlesCard() {
     const d = new Date(value);
     return Number.isNaN(d.getTime())
       ? ""
-      : d.toLocaleDateString(tr ? "tr-TR" : "en-US", {
+      : d.toLocaleDateString(language === "tr" ? "tr-TR" : "en-US", {
           day: "numeric",
           month: "short",
           year: "numeric",
@@ -104,12 +92,12 @@ export default function ArticlesCard() {
     >
       <div hidden={!!selected}>
         <SectionHeading
-          number="05"
-          eyebrow={tr ? "NOTLAR & DENEYİMLER" : "NOTES & EXPERIENCES"}
+          section="articles"
+          eyebrow={t("articles.eyebrow")}
           title={
             <>
-              {tr ? "Öğren. Üret. " : "Learn. Build. "}
-              <em>{tr ? "Paylaş." : "Share."}</em>
+              {t("articles.title_a")}
+              <em>{t("articles.title_b")}</em>
             </>
           }
           description={t("articles.subtitle")}
@@ -182,7 +170,7 @@ export default function ArticlesCard() {
                         ).split(/\s+/).length / 200,
                       ),
                     )}{" "}
-                    {tr ? "dk okuma" : "min read"}
+                    {t("articles.read_time")}
                   </span>
                 </div>
                 <span className="article-arrow">
@@ -201,7 +189,7 @@ export default function ArticlesCard() {
         >
           <button className="text-link back-link" onClick={close}>
             <ArrowLeft size={17} />
-            {tr ? "Makalelere dön" : "Back to articles"}
+            {t("articles.back")}
           </button>
           <span className="eyebrow">
             MEDIUM <span>/</span> {date(selected.pubDate)}
@@ -212,7 +200,7 @@ export default function ArticlesCard() {
           <div className="article-author">
             <img src="/profile.jpg" alt="" />
             <span>
-              Mahmut Can Çönger<small>Android Developer</small>
+              {profile.name}<small>{profile.role[language]}</small>
             </span>
           </div>
           <div
@@ -234,7 +222,7 @@ export default function ArticlesCard() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {tr ? "Medium’da görüntüle" : "View on Medium"}
+            {t("articles.view_on_medium")}
             <ArrowUpRight size={16} />
           </a>
         </motion.article>
