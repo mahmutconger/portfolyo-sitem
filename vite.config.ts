@@ -1,8 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import vercelRedirects from "./vite/vercelRedirects";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), vercelRedirects()],
   build: {
     rollupOptions: {
       output: {
