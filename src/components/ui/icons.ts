@@ -57,3 +57,5 @@ export { UsersIcon as Users } from "@phosphor-icons/react/dist/csr/Users";
 export { XIcon as X } from "@phosphor-icons/react/dist/csr/X";
 
 export type { Icon as PortfolioIcon } from "@phosphor-icons/react/dist/lib/types";
+export { BriefcaseIcon as Briefcase } from "@phosphor-icons/react/dist/csr/Briefcase";
+export { CaretDownIcon as ChevronDown } from "@phosphor-icons/react/dist/csr/CaretDown";

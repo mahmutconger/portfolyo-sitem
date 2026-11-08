@@ -7,14 +7,17 @@ import {
   Send,
   Github,
   Linkedin,
-  FileText,
   ExternalLink,
 } from "../components/ui/icons";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db, firebaseConfigured } from "../firebase";
+import { firebaseConfigured } from "../firebase";
 import emailjs from "@emailjs/browser";
 import { useTranslation } from "react-i18next";
 import { useAnalytics } from "../hooks/useAnalytics";
+import { useLanguage } from "../hooks/useLanguage";
+import { saveContactMessage } from "../services/portfolioRepository";
+import { profile, socialLink } from "../content/profile";
+import { cvDocuments } from "../content/cv";
+import CvDownloadMenu from "../components/portfolio/CvDownloadMenu";
 
 const PUBLIC_KEY = "NVd_00kA9C2KrM8gL";
 const SERVICE_ID = "service_qrqlzfe";
@@ -44,8 +47,10 @@ function markMessageSent() {
 }
 
 const Contact = () => {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
+  const { t } = useTranslation();
+  const language = useLanguage();
+  const github = socialLink("github");
+  const linkedin = socialLink("linkedin");
   const { trackEvent } = useAnalytics();
   const [step, setStep] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState({
@@ -82,15 +87,11 @@ const Contact = () => {
 
   const copyEmail = async () => {
     try {
-      await navigator.clipboard.writeText("mahmutconger@gmail.com");
+      await navigator.clipboard.writeText(profile.email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setError(
-        tr
-          ? "E-posta kopyalanamadı: mahmutconger@gmail.com"
-          : "Could not copy: mahmutconger@gmail.com",
-      );
+      setError(t("contact.copy_failed", { email: profile.email }));
     }
   };
 
@@ -108,11 +109,7 @@ const Contact = () => {
       return;
     }
     if (!firebaseConfigured) {
-      setError(
-        tr
-          ? "Form şu anda kullanılamıyor. Bana doğrudan e-posta gönderebilirsiniz."
-          : "The form is unavailable. You can email me directly.",
-      );
+      setError(t("contact.form_unavailable"));
       return;
     }
     sendingRef.current = true;
@@ -124,11 +121,7 @@ const Contact = () => {
         email: formData.email.trim(),
         message: formData.message.trim(),
       };
-      await addDoc(collection(db, "messages"), {
-        ...message,
-        createdAt: serverTimestamp(),
-        isRead: false,
-      });
+      await saveContactMessage(message);
       markMessageSent();
       setCooldown(60);
       setStep("success");
@@ -142,7 +135,7 @@ const Contact = () => {
           {
             ...message,
             time: `${now.toLocaleDateString("tr-TR")} ${now.toLocaleTimeString("tr-TR")}`,
-            to_email: "mahmutconger@gmail.com",
+            to_email: profile.email,
           },
           PUBLIC_KEY,
         );
@@ -150,7 +143,7 @@ const Contact = () => {
         console.warn("Mesaj kaydedildi, e-posta bildirimi gönderilemedi:", notificationError);
       }
     } catch {
-      setError(tr ? "Mesaj gönderilemedi. Lütfen tekrar deneyin." : "The message could not be sent. Please try again.");
+      setError(t("contact.send_failed"));
     } finally {
       setLoading(false);
       sendingRef.current = false;
@@ -198,7 +191,7 @@ const Contact = () => {
 
             {/* GitHub */}
             <a
-              href="https://github.com/mahmutconger"
+              href={github.href}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl hover:border-zinc-600 hover:bg-zinc-800 transition-all duration-200 group"
@@ -207,15 +200,17 @@ const Contact = () => {
                 <Github className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-zinc-200">GitHub</p>
-                <p className="text-xs text-zinc-500">@mahmutconger</p>
+                <p className="text-sm font-medium text-zinc-200">
+                  {github.label[language]}
+                </p>
+                <p className="text-xs text-zinc-500">{github.handle}</p>
               </div>
               <ExternalLink className="w-3.5 h-3.5 text-zinc-600 ml-auto shrink-0" />
             </a>
 
             {/* LinkedIn */}
             <a
-              href="https://www.linkedin.com/in/mahmut-can-conger-4305b1299/"
+              href={linkedin.href}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl hover:border-[#2C74B3]/50 hover:bg-zinc-800 transition-all duration-200 group"
@@ -224,32 +219,21 @@ const Contact = () => {
                 <Linkedin className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-zinc-200">LinkedIn</p>
-                <p className="text-xs text-zinc-500">Mahmut Can Çönger</p>
+                <p className="text-sm font-medium text-zinc-200">
+                  {linkedin.label[language]}
+                </p>
+                <p className="text-xs text-zinc-500">{linkedin.handle}</p>
               </div>
               <ExternalLink className="w-3.5 h-3.5 text-zinc-600 ml-auto shrink-0" />
             </a>
 
-            {/* CV indirme */}
-            <a
-              href="/Mahmut_Can_CONGER_CV.pdf"
-              download="Mahmut_Can_Conger_CV.pdf"
-              onClick={() => trackEvent("cv_download", "contact")}
-              className="flex items-center gap-3 p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl hover:border-[#2C74B3]/40 hover:bg-zinc-800 transition-all duration-200 group"
-            >
-              <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-zinc-400 group-hover:text-[#9BC7E8] transition-colors">
-                <FileText className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-zinc-200">
-                  {t("contact.cv_btn")}
-                </p>
-                <p className="text-xs text-zinc-500">
-                  {t("contact.cv_format")}
-                </p>
-              </div>
-              <ExternalLink className="w-3.5 h-3.5 text-zinc-600 ml-auto shrink-0" />
-            </a>
+            {/* CV indirme: varsayılan mobil CV, menüde üç seçenek */}
+            <CvDownloadMenu
+              documents={cvDocuments}
+              language={language}
+              variant="tile"
+              onDownload={(cv) => trackEvent("cv_download", `contact:${cv.variant}`)}
+            />
 
             {/* Doğrudan e-posta */}
             <div className="p-4 bg-zinc-800/60 border border-zinc-700/50 rounded-xl">
@@ -261,21 +245,15 @@ const Contact = () => {
               </div>
               <div className="flex items-center justify-between bg-zinc-900 rounded-lg px-3 py-2.5 border border-zinc-800">
                 <a
-                  href="mailto:mahmutconger@gmail.com"
+                  href={`mailto:${profile.email}`}
                   className="text-xs font-mono text-zinc-300 truncate"
                 >
-                  mahmutconger@gmail.com
+                  {profile.email}
                 </a>
                 <button
                   onClick={copyEmail}
                   aria-label={
-                    copied
-                      ? tr
-                        ? "E-posta kopyalandı"
-                        : "Email copied"
-                      : tr
-                        ? "E-postayı kopyala"
-                        : "Copy email"
+                    copied ? t("contact.email_copied") : t("contact.copy_email")
                   }
                   className="p-1.5 hover:bg-white/10 rounded-md transition-colors text-zinc-400 hover:text-white ml-2 shrink-0"
                 >
@@ -348,7 +326,7 @@ const Contact = () => {
                       value={formData.email}
                       onChange={handleChange}
                       className={inputCls}
-                      placeholder="ornek@mail.com"
+                      placeholder={t("contact.email_placeholder")}
                       required
                     />
                   </div>

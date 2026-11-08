@@ -1,14 +1,7 @@
 import type { Variants } from "motion/react";
 
-export const sectionIds = [
-  "home",
-  "about",
-  "tech",
-  "projects",
-  "articles",
-  "contact",
-] as const;
-export type SectionId = (typeof sectionIds)[number];
+export { sectionIds, type SectionId } from "../../content/sections";
+
 export const stagger: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.085, delayChildren: 0.1 } },

@@ -2223,3 +2223,380 @@
     height: 25px;
   }
 }
+
+/* ── CV uyumu: uygunluk rozeti ─────────────────────────────────────────── */
+.hero-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  max-width: 100%;
+  margin: -4px 0 16px;
+  padding: 7px 12px 7px 11px;
+  border: 1px solid #9bc7e82e;
+  border-radius: 999px;
+  background: #2c74b31a;
+  color: #d1e8fa;
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/* ── CV indirme menüsü ─────────────────────────────────────────────────── */
+.cv-menu {
+  position: relative;
+}
+.cv-menu-split {
+  display: flex;
+  align-items: stretch;
+}
+.cv-menu-hero .cv-menu-main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.cv-menu-hero .cv-menu-toggle {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
+  padding-left: 11px;
+  padding-right: 11px;
+}
+.cv-menu-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.cv-menu-toggle svg {
+  transition: transform 0.2s;
+}
+.cv-menu-list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border: 1px solid #c9d8f035;
+  border-radius: 12px;
+  background: linear-gradient(130deg, #144272f5, #0a2647f5);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 18px 40px #00000059;
+}
+.cv-menu-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 8px;
+  color: #d1d7e4;
+  font-size: 11px;
+}
+.cv-menu-list a:hover,
+.cv-menu-list a:focus-visible {
+  background: #ffffff10;
+  color: #ffffff;
+  outline-offset: -2px;
+}
+.cv-menu-badge {
+  margin-left: auto;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+/* İletişim bölümündeki kutu görünümü */
+.cv-menu-tile .cv-menu-split {
+  border: 1px solid #3f3f4680;
+  border-radius: 12px;
+  background: #27272a99;
+  transition: border-color 0.2s, background 0.2s;
+}
+.cv-menu-tile .cv-menu-split:hover {
+  border-color: #2c74b366;
+  background: #27272a;
+}
+.cv-menu-tile .cv-menu-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  min-width: 0;
+}
+.cv-menu-tile-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #18181b;
+  display: grid;
+  place-items: center;
+  color: #a1a1aa;
+}
+.cv-menu-main-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e4e4e7;
+}
+.cv-menu-hero .cv-menu-main-copy {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+.cv-menu-main-copy small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #71717a;
+}
+.cv-menu-tile .cv-menu-toggle {
+  padding: 0 16px;
+  border-left: 1px solid #3f3f4680;
+  color: #a1a1aa;
+}
+.cv-menu-tile .cv-menu-list {
+  left: auto;
+  right: 0;
+}
+
+/* ── Deneyim ───────────────────────────────────────────────────────────── */
+.experience-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  align-items: start;
+}
+.experience-header {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+.experience-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--accent);
+  background: #20529545;
+}
+.experience-header h2 {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.experience-header h2 span {
+  font-weight: 450;
+  color: #c9d6e6;
+}
+.experience-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: #a3d0ef;
+  font-size: 9px !important;
+}
+.experience-meta i,
+.project-meta i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #6c7f90;
+}
+.experience-bullets {
+  list-style: disc;
+  padding-left: 17px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.85;
+}
+.experience-bullets li + li {
+  margin-top: 8px;
+}
+.experience-projects .eyebrow {
+  margin-bottom: 10px;
+}
+.experience-projects ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.experience-projects a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff03;
+  color: var(--ink);
+  transition: border-color 0.2s, background 0.2s;
+}
+.experience-projects a:hover {
+  border-color: #9bc7e840;
+  background: #ffffff08;
+}
+.experience-projects a > svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.experience-project-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.experience-project-copy strong {
+  font-size: 12px;
+  font-weight: 650;
+}
+.experience-project-copy small {
+  font-size: 10px;
+  color: var(--quiet);
+}
+
+/* ── Proje türü, tarih ve durum satırları ──────────────────────────────── */
+.project-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #a3c7e3;
+  font-size: 9px !important;
+  letter-spacing: 0.06em;
+}
+.project-kind {
+  color: #d1e8fa;
+}
+.project-tagline {
+  color: #c9d6e6 !important;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.project-status {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 12px;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #b9d7ee;
+}
+.project-status .status-light {
+  transform: translateY(-1px);
+}
+.project-summary .project-meta {
+  font-size: 9px !important;
+}
+.project-small .project-meta {
+  padding: 13px 5px 0;
+}
+.project-small h3 {
+  padding-top: 8px;
+}
+.project-small .project-status {
+  margin: 4px 5px 6px;
+  font-size: 9px;
+}
+.project-detail > .project-meta {
+  margin-bottom: 12px;
+}
+.project-detail > .project-tagline {
+  font-size: 13px;
+}
+.project-story p + p {
+  margin-top: 14px;
+}
+.project-summary-lead {
+  color: #c9d6e6 !important;
+}
+.detail-links .button svg:last-child {
+  opacity: 0.7;
+}
+
+/* ── Yetenek grupları ──────────────────────────────────────────────────── */
+.skill-groups {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+.skill-group {
+  grid-column: span 2;
+}
+.skill-group-android,
+.skill-group-backend {
+  grid-column: span 3;
+}
+.skill-group h3 {
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.tags > li {
+  font-size: 9px;
+  padding: 6px 10px;
+  border: 1px solid #c6dff212;
+  border-radius: 5px;
+  color: #b7c6d1;
+  background: #2c74b30d;
+}
+
+/* Hakkımda: iki çalışma prensibi kartı satırı eşit böler */
+.principle {
+  grid-column: span 3;
+}
+
+@media (max-width: 900px) {
+  .experience-list {
+    grid-template-columns: 1fr;
+  }
+  .skill-groups {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .skill-group,
+  .skill-group-android,
+  .skill-group-backend {
+    grid-column: span 1;
+  }
+  .skill-group-android {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 600px) {
+  .hero-availability {
+    font-size: 9px;
+    border-radius: 12px;
+  }
+  .skill-groups {
+    grid-template-columns: 1fr;
+  }
+  .skill-group-android {
+    grid-column: auto;
+  }
+  .experience-header h2 {
+    font-size: 14px;
+  }
+  .cv-menu-list {
+    min-width: 230px;
+  }
+}
+/* Masaüstünde hero kartın altı dar olduğu için menü yukarı açılır. */
+@media (min-width: 901px) {
+  .cv-menu-hero .cv-menu-list {
+    top: auto;
+    bottom: calc(100% + 8px);
+  }
+}
+.project-detail > .back-link {
+  display: flex;
+  width: fit-content;
+}
+.project-detail > .project-meta {
+  display: flex;
+}

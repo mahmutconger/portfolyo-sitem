@@ -1,66 +1,177 @@
 {
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımda",
+    "tech": "Yetenekler",
+    "experience": "Deneyim",
+    "projects": "Projeler",
+    "articles": "Makaleler",
+    "contact": "İletişim",
+    "select_language": "Dil Seçin"
+  },
+  "common": {
+    "skip_to_content": "İçeriğe geç",
+    "home_aria": "Ana sayfa",
+    "personal_portfolio": "KİŞİSEL PORTFOLYO",
+    "lets_create": "Birlikte üretelim",
+    "switch_language": "İngilizceye geç",
+    "main_navigation": "Ana gezinme",
+    "dock_caption": "Biraz keşfet.",
+    "try_again": "Tekrar dene",
+    "loading": "Yükleniyor"
+  },
+  "hero": {
+    "greeting": "Merhaba, ben",
+    "projects_btn": "Projelerimi İncele",
+    "social_tagline": "Birlikte güzel şeyler üretelim.",
+    "focus_label": "ODAK NOKTAM",
+    "closer": "Biraz daha yakından",
+    "availability_label": "Uygunluk"
+  },
+  "cv": {
+    "download": "CV'yi İndir",
+    "more_options": "Diğer CV seçenekleri",
+    "menu_label": "CV seçenekleri",
+    "format": "PDF",
+    "default_badge": "Varsayılan"
+  },
+  "about": {
+    "profile": "Profesyonel Profil",
+    "title_main": "Mühendislik Disipliniyle",
+    "title_sub": "Modern Çözümler",
+    "principles": "Çalışma Prensibim",
+    "edu_title": "Eğitim Geçmişim",
+    "competencies_title": "Yetkinlikler"
+  },
+  "tech": {
+    "eyebrow": "ARAÇLAR & YAKLAŞIM",
+    "title_a": "Doğru araçlar.",
+    "title_b": "Sağlam temeller.",
+    "subtitle": "Geliştirme sürecimde kullandığım araçlar ve benimsediğim yazılım prensipleri.",
+    "approach": "KODUN ARKASINDAKİ YAKLAŞIM"
+  },
+  "experience": {
+    "eyebrow": "STAJ & MÜŞTERİ İŞLERİ",
+    "title_a": "Gerçek ekipler,",
+    "title_b": "gerçek kullanıcılar.",
+    "description": "Şirket stajım ve freelance olarak yürüttüğüm müşteri projeleri.",
+    "projects_label": "Bu dönemdeki projeler",
+    "view_project": "Proje kartını aç"
+  },
+  "projects": {
+    "eyebrow": "SEÇİLMİŞ ÇALIŞMALAR",
+    "title_a": "Fikirler, ",
+    "title_b": "hayata geçti.",
+    "description": "Müşteri işleri, kişisel ürünler, bitirme tezi ve okul projeleri.",
+    "explore": "Projeyi keşfet",
+    "inspect": "İncele",
+    "previous": "Önceki proje",
+    "next": "Sonraki proje",
+    "view_all": "Tüm Projeleri Görüntüle",
+    "hide_list": "Listeyi gizle",
+    "from_idea": "FİKİRDEN UYGULAMAYA",
+    "back": "Projelere dön",
+    "story": "Proje Hikâyesi",
+    "highlights": "Öne Çıkanlar",
+    "status": "Durum",
+    "previous_image": "Önceki görsel",
+    "next_image": "Sonraki görsel",
+    "image_fallback": "{{title}} için görsel şu anda yüklenemiyor",
+    "kind": {
+      "client": "Müşteri işi",
+      "personal": "Kişisel ürün",
+      "thesis": "Bitirme tezi",
+      "school": "Okul projesi",
+      "hackathon": "Hackathon projesi"
+    },
+    "links": {
+      "website": "Web sitesi",
+      "googlePlay": "Google Play",
+      "source": "Kaynak Kod",
+      "linkedin": "LinkedIn gönderisi"
+    }
+  },
+  "articles": {
+    "eyebrow": "NOTLAR & DENEYİMLER",
+    "title_a": "Öğren. Üret. ",
+    "title_b": "Paylaş.",
+    "subtitle": "Öğrendiklerimi ve teknik deneyimlerimi Medium'da paylaşıyorum.",
+    "read_time": "dk okuma",
+    "back": "Makalelere dön",
+    "view_on_medium": "Medium'da görüntüle",
+    "visit_medium": "Medium Profilime Git",
+    "loading": "Makaleler yükleniyor...",
+    "empty": "Henüz yayınlanmış bir makale yok.",
+    "error": "Makaleler şu anda yüklenemedi."
+  },
+  "contact": {
+    "label": "İletişim & Sosyal",
+    "title": "Benimle Bağlantı Kurun",
+    "desc": "Yeni projeler, iş birlikleri veya sadece teknoloji sohbetleri için her zaman buradayım.",
+    "channels": "İletişim Kanalları",
+    "direct_mail": "Doğrudan Mail",
+    "copy_success": "Panoya kopyalandı!",
+    "copy_email": "E-postayı kopyala",
+    "email_copied": "E-posta kopyalandı",
+    "copy_failed": "E-posta kopyalanamadı: {{email}}",
+    "form_name": "İsim Soyisim",
+    "form_email": "Email Adresi",
+    "email_placeholder": "ornek@mail.com",
+    "form_msg": "Mesajınız",
+    "form_unavailable": "Form şu anda kullanılamıyor. Bana doğrudan e-posta gönderebilirsiniz.",
+    "send_failed": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+    "send": "Mesaj Gönder",
+    "sending": "Mesaj Gönderiliyor...",
+    "rate_limit": "{{seconds}} saniye sonra tekrar deneyin",
+    "cooldown_notice": "Bu tarayıcıdan dakikada bir mesaj gönderebilirsiniz.",
+    "success_title": "Mesajınız İletildi!",
+    "success_desc": "Teşekkür ederim. En kısa sürede dönüş yapacağım."
+  },
+  "notfound": {
+    "subtitle": "Activity Not Found Exception!",
+    "description": "Aradığınız sayfa derlenemedi veya garbage collector tarafından temizlendi. Lütfen ana thread'e geri dönün.",
+    "back_home": "Ana Sayfaya Dön"
+  },
   "admin": {
-    "title": "Yönetim Paneli",
-    "subtitle": "İçeriklerini ve gelen kutunu yönet.",
-    "logout": "Çıkış",
+    "title": "Admin Paneli",
+    "subtitle": "Yönetim Konsolu",
+    "logout": "Çıkış Yap",
     "tabs": {
       "projects": "Projeler",
       "messages": "Mesajlar"
     },
     "form": {
       "addProject": "Yeni Proje Ekle",
-      "editProject": "Projeyi Düzenle",
-      "cancel": "İptal",
       "langTab": {
-        "tr": "Türkçe",
-        "en": "İngilizce"
+        "tr": "Türkçe İçerik",
+        "en": "İngilizce İçerik"
       },
       "fields": {
-        "title": "Başlık",
+        "title": "Proje Başlığı",
         "shortDesc": "Kısa Açıklama",
-        "longStory": "Uzun Hikaye",
-        "coverImage": "Kapak Resmi",
+        "coverImage": "Kapak Görseli",
         "selectFile": "Dosya Seç",
-        "featured": "Ana Sayfada Öne Çıkar",
-        "technologies": "Teknolojiler",
-        "otherTag": "Diğer...",
-        "features": "Özellikler",
-        "gallery": "Galeri",
-        "multiPhoto": "Çoklu Fotoğraf Ekle",
-        "githubUrl": "GitHub URL",
-        "liveUrl": "Play Store URL",
-        "linkedinUrl": "LinkedIn Post URL"
+        "featured": "Öne Çıkan Proje",
+        "longStory": "Detaylı Hikaye",
+        "technologies": "Kullanılan Teknolojiler",
+        "otherTag": "Diğer Etiket Ekle",
+        "features": "Proje Özellikleri",
+        "gallery": "Proje Galerisi",
+        "multiPhoto": "Çoklu Fotoğraf Seç",
+        "githubUrl": "GitHub Linki",
+        "liveUrl": "Canlı Demo Linki",
+        "linkedinUrl": "LinkedIn Gönderi Linki"
       },
       "submit": {
         "publish": "Projeyi Yayınla",
-        "update": "Güncellemeyi Kaydet",
-        "processing": "İşleniyor...",
-        "uploading": "Resim Yükleniyor..."
-      },
-      "validation": {
-        "fileTooLarge": "çok büyük! Lütfen 5MB altı resimler yükleyin.",
-        "uploadFailed": "Yükleme başarısız",
-        "unknownError": "Bilinmeyen hata",
-        "deleteConfirm": "Bu öğeyi kalıcı olarak silmek istediğinize emin misiniz?",
-        "deleteError": "Hata oluştu.",
-        "added": "Eklendi!",
-        "updated": "Güncellendi!",
-        "error": "Hata oluştu."
+        "update": "Projeyi Güncelle",
+        "saving": "Kaydediliyor..."
       }
     },
     "projects": {
-      "listTitle": "Mevcut Projeler",
+      "listTitle": "Proje Listesi",
       "featured": "Öne Çıkan",
       "edit": "Düzenle",
-      "delete": "Sil"
-    },
-    "messages": {
-      "title": "Gelen Mesajlar",
-      "total": "mesaj",
-      "empty": "Henüz hiç mesajınız yok.",
-      "reply": "Yanıtla",
-      "replySubject": "Dönüş: Proje Hakkında",
-      "replyBody": "Merhaba {{name}},\n\nMesajını aldım...",
       "delete": "Sil"
     }
   }

@@ -1,23 +1,28 @@
-import { ArrowDownToLine, ArrowUpRight, MapPin } from "../ui/icons";
+import { ArrowUpRight, MapPin } from "../ui/icons";
 import {
   motion,
   useMotionValue,
   useSpring,
   useReducedMotion,
 } from "motion/react";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { SocialLinks } from "./shared";
 import { reveal, stagger, type SectionId } from "./motion";
 import { useAnalytics } from "../../hooks/useAnalytics";
+import { useLanguage } from "../../hooks/useLanguage";
 import { technologies } from "./technologies";
+import { profile } from "../../content/profile";
+import { cvDocuments } from "../../content/cv";
+import CvDownloadMenu from "./CvDownloadMenu";
 
 export default function HomeCard({
   navigate,
 }: {
   navigate: (id: SectionId) => void;
 }) {
-  const { t, i18n } = useTranslation();
-  const tr = i18n.language.startsWith("tr");
+  const { t } = useTranslation();
+  const language = useLanguage();
   const { trackEvent } = useAnalytics();
   const reduced = useReducedMotion();
   const x = useMotionValue(0),
@@ -33,9 +38,7 @@ export default function HomeCard({
     >
       <div className="hero-copy">
         <motion.h1 variants={reveal} tabIndex={-1} data-section-heading>
-          <span className="hero-greeting">
-            {tr ? "Merhaba, ben" : "Hello, I’m"}
-          </span>
+          <span className="hero-greeting">{t("hero.greeting")}</span>
           <span className="hero-name">
             Mahmut Can
             <span className="signature">
@@ -44,10 +47,15 @@ export default function HomeCard({
           </span>
         </motion.h1>
         <motion.div variants={reveal} className="hero-role">
-          {tr ? "Yazılım Mühendisi" : "Software Engineer"}
+          {profile.role[language]}
         </motion.div>
+        <motion.p variants={reveal} className="hero-availability">
+          <span className="status-light" aria-hidden="true" />
+          <span className="sr-only">{t("hero.availability_label")}: </span>
+          {profile.availability[language]}
+        </motion.p>
         <motion.p variants={reveal} className="hero-description">
-          {t("hero.description")}
+          {profile.heroDescription[language]}
         </motion.p>
         <motion.div variants={reveal} className="hero-actions">
           <button
@@ -57,24 +65,17 @@ export default function HomeCard({
             {t("hero.projects_btn")}
             <ArrowUpRight size={18} />
           </button>
-          <a
-            className="button secondary"
-            href="/Mahmut_Can_CONGER_CV.pdf"
-            download
-            onClick={() => trackEvent("cv_download", "hero")}
-          >
-            <ArrowDownToLine size={16} />
-            {t("hero.cv_download")}
-          </a>
+          <CvDownloadMenu
+            documents={cvDocuments}
+            language={language}
+            variant="hero"
+            onDownload={(cv) => trackEvent("cv_download", `hero:${cv.variant}`)}
+          />
         </motion.div>
         <motion.div variants={reveal} className="hero-social">
           <SocialLinks />
           <span className="social-rule" />
-          <span>
-            {tr
-              ? "Birlikte güzel şeyler üretelim."
-              : "Let’s build something meaningful."}
-          </span>
+          <span>{t("hero.social_tagline")}</span>
         </motion.div>
       </div>
       <motion.div
@@ -98,14 +99,14 @@ export default function HomeCard({
           <div className="portrait-frame">
             <img
               src="/profile.jpg"
-              alt="Mahmut Can Çönger"
+              alt={profile.name}
               fetchPriority="high"
             />
             <div className="portrait-overlay" />
             <div className="portrait-caption">
-              <span>Mahmut Can Çönger</span>
+              <span>{profile.name}</span>
               <small>
-                <MapPin size={12} /> Manisa, Türkiye
+                <MapPin size={12} /> {profile.location}
               </small>
             </div>
           </div>
@@ -123,13 +124,17 @@ export default function HomeCard({
         </motion.div>
       </motion.div>
       <motion.div variants={reveal} className="home-bottom">
-        <span className="mono">{tr ? "ODAK NOKTAM" : "MY FOCUS"}</span>
+        <span className="mono">{t("hero.focus_label")}</span>
         <span>
-          Kotlin <i /> Jetpack Compose <i /> Clean Architecture
+          {profile.focus.map((item, index) => (
+            <Fragment key={item}>
+              {index > 0 && <i />}
+              {item}
+            </Fragment>
+          ))}
         </span>
         <button onClick={() => navigate("about")}>
-          {tr ? "Biraz daha yakından" : "A little closer"}{" "}
-          <ArrowUpRight size={15} />
+          {t("hero.closer")} <ArrowUpRight size={15} />
         </button>
       </motion.div>
     </motion.div>

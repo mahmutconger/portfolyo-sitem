@@ -1,0 +1,13 @@
+{
+  "status": "ok",
+  "items": [
+    {
+      "title": "Test makalesi",
+      "link": "https://medium.com/@mahmutconger/test",
+      "pubDate": "2026-10-01 10:00:00",
+      "thumbnail": "/profile.jpg",
+      "description": "<p>E2E testleri için sabit makale içeriği.</p>",
+      "content": "<p>E2E testleri için sabit makale içeriği.</p>"
+    }
+  ]
+}

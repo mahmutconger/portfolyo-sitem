@@ -1,17 +1,21 @@
 import { motion } from "motion/react";
-import { ArrowUpRight, Github, Instagram, Linkedin, Mail } from "../ui/icons";
+import { ArrowUpRight } from "../ui/icons";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { reveal } from "./motion";
 import { useAnalytics } from "../../hooks/useAnalytics";
+import { useLanguage } from "../../hooks/useLanguage";
+import { socialLinks } from "../../content/profile";
+import { sectionNumber, type SectionId } from "../../content/sections";
+import { socialIcons } from "./socialIcons";
 
 export function SectionHeading({
-  number,
+  section,
   eyebrow,
   title,
   description,
 }: {
-  number: string;
+  section: SectionId;
   eyebrow: string;
   title: ReactNode;
   description?: string;
@@ -19,7 +23,7 @@ export function SectionHeading({
   return (
     <motion.header variants={reveal} className="section-heading">
       <div className="eyebrow">
-        <span>{number} /</span> {eyebrow}
+        <span>{sectionNumber(section)} /</span> {eyebrow}
       </div>
       <h1 tabIndex={-1} data-section-heading>
         {title}
@@ -31,37 +35,25 @@ export function SectionHeading({
 
 export function SocialLinks() {
   const { trackEvent } = useAnalytics();
+  const language = useLanguage();
   return (
     <div className="social-links">
-      {[
-        {
-          label: "GitHub",
-          href: "https://github.com/mahmutconger",
-          Icon: Github,
-        },
-        {
-          label: "LinkedIn",
-          href: "https://www.linkedin.com/in/mahmut-can-conger-4305b1299/",
-          Icon: Linkedin,
-        },
-        {
-          label: "Instagram",
-          href: "https://www.instagram.com/canconger58/",
-          Icon: Instagram,
-        },
-        { label: "E-posta", href: "mailto:mahmutconger@gmail.com", Icon: Mail },
-      ].map(({ label, href, Icon }) => (
-        <a
-          key={label}
-          href={href}
-          aria-label={label}
-          target={href.startsWith("mailto") ? undefined : "_blank"}
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("social_click", label)}
-        >
-          <Icon size={18} />
-        </a>
-      ))}
+      {socialLinks.map(({ id, label, href }) => {
+        const Icon = socialIcons[id];
+        const external = !href.startsWith("mailto:");
+        return (
+          <a
+            key={id}
+            href={href}
+            aria-label={label[language]}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            onClick={() => trackEvent("social_click", label.en)}
+          >
+            <Icon size={18} />
+          </a>
+        );
+      })}
     </div>
   );
 }
@@ -75,7 +67,7 @@ export function EmptyState({
   onRetry?: () => void;
   children?: ReactNode;
 }) {
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   return (
     <div className="empty-state" role="status">
       <span className="empty-orbit">
@@ -85,7 +77,7 @@ export function EmptyState({
       {children}
       {onRetry && (
         <button className="button secondary" onClick={onRetry}>
-          {i18n.language.startsWith("tr") ? "Tekrar dene" : "Try again"}
+          {t("common.try_again")}
         </button>
       )}
     </div>
@@ -93,8 +85,9 @@ export function EmptyState({
 }
 
 export function LoadingCards() {
+  const { t } = useTranslation();
   return (
-    <div className="loading-cards" role="status" aria-label="Yükleniyor">
+    <div className="loading-cards" role="status" aria-label={t("common.loading")}>
       {[0, 1, 2].map((i) => (
         <div className="skeleton-card" key={i}>
           <div />

@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/Mahmut_Can_CONGER_CV.pdf",
+      "destination": "/cv/Mahmut_Can_Conger_CV_Mobil.pdf",
+      "permanent": false
+    },
+    {
+      "source": "/CV_TR.pdf",
+      "destination": "/cv/Mahmut_Can_Conger_CV_Mobil.pdf",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

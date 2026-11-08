@@ -11,6 +11,7 @@ import {
   House,
   UserRound,
   Layers3,
+  Briefcase,
   FolderOpen,
   BookOpen,
   Send,
@@ -19,14 +20,15 @@ import {
 import { useTranslation } from "react-i18next";
 import { sectionIds, type SectionId } from "./motion";
 
-const icons: PortfolioIcon[] = [
-  House,
-  UserRound,
-  Layers3,
-  FolderOpen,
-  BookOpen,
-  Send,
-];
+const icons: Record<SectionId, PortfolioIcon> = {
+  home: House,
+  about: UserRound,
+  tech: Layers3,
+  experience: Briefcase,
+  projects: FolderOpen,
+  articles: BookOpen,
+  contact: Send,
+};
 function DockItem({
   mouseX,
   id,
@@ -86,14 +88,9 @@ export default function Dock({
   onSelect: (id: SectionId) => void;
 }) {
   const mouseX = useMotionValue(Infinity);
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   return (
-    <nav
-      aria-label={
-        i18n.language.startsWith("tr") ? "Ana gezinme" : "Main navigation"
-      }
-      className="dock-wrap"
-    >
+    <nav aria-label={t("common.main_navigation")} className="dock-wrap">
       <div
         className="dock"
         onPointerMove={(e) => {
@@ -101,22 +98,18 @@ export default function Dock({
         }}
         onPointerLeave={() => mouseX.set(Infinity)}
       >
-        {sectionIds.map((id, i) => (
+        {sectionIds.map((id) => (
           <DockItem
             key={id}
             mouseX={mouseX}
             id={id}
-            Icon={icons[i]}
+            Icon={icons[id]}
             active={id === active}
             onSelect={onSelect}
           />
         ))}
       </div>
-      <span className="dock-caption">
-        {i18n.language.startsWith("tr")
-          ? "Biraz keşfet."
-          : "Take a look around."}
-      </span>
+      <span className="dock-caption">{t("common.dock_caption")}</span>
     </nav>
   );
 }

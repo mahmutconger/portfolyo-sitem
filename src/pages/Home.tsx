@@ -14,21 +14,28 @@ import Dock from "../components/portfolio/Dock";
 import HomeCard from "../components/portfolio/HomeCard";
 import { AboutCard, SkillsCard } from "../components/portfolio/ProfileCards";
 import { LoadingCards } from "../components/portfolio/shared";
-import { sectionIds, type SectionId } from "../components/portfolio/motion";
+import {
+  isSectionId,
+  sectionNumber,
+  sectionTotal,
+  type SectionId,
+} from "../content/sections";
+import { pageTitle, profile } from "../content/profile";
 import { useAnalytics } from "../hooks/useAnalytics";
+import { useLanguage } from "../hooks/useLanguage";
 import "../portfolio.css";
 
 const ProjectsCard = lazy(() => import("../components/portfolio/ProjectsCard"));
 const ArticlesCard = lazy(() => import("../components/portfolio/ArticlesCard"));
+const ExperienceSection = lazy(() => import("../sections/ExperienceSection"));
 const Contact = lazy(() => import("../sections/Contact"));
 
 export default function Home() {
   const { hash } = useLocation();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const requested = hash.slice(1) as SectionId;
-  const active = sectionIds.includes(requested) ? requested : "home";
-  const index = sectionIds.indexOf(active);
+  const requested = hash.slice(1);
+  const active: SectionId = isSectionId(requested) ? requested : "home";
   const { trackEvent } = useAnalytics(true, true);
   const trackRef = useRef(trackEvent);
   useEffect(() => {
@@ -40,14 +47,18 @@ export default function Home() {
     pointerY = useMotionValue(0);
   const x = useSpring(pointerX, { stiffness: 35, damping: 22 });
   const y = useSpring(pointerY, { stiffness: 35, damping: 22 });
-  const tr = i18n.language.startsWith("tr");
+  const language = useLanguage();
   function selectSection(id: SectionId) {
     if (id !== active) navigate(`/#${id}`);
   }
   useEffect(() => {
-    document.documentElement.lang = tr ? "tr" : "en";
-    document.title = "Mahmut Can Çönger | Software Engineer";
-  }, [tr]);
+    // Başlık ve meta açıklaması etkin dile göre güncellenir.
+    document.documentElement.lang = language;
+    document.title = pageTitle[language];
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", profile.metaDescription[language]);
+  }, [language]);
   useEffect(() => {
     if (!seen.current.has(active)) {
       seen.current.add(active);
@@ -98,13 +109,13 @@ export default function Home() {
             document.getElementById("active-card")?.focus();
           }}
         >
-          {tr ? "İçeriğe geç" : "Skip to content"}
+          {t("common.skip_to_content")}
         </a>
         <header className="site-header">
           <button
             className="brand"
             onClick={() => selectSection("home")}
-            aria-label={tr ? "Ana sayfa" : "Home"}
+            aria-label={t("common.home_aria")}
           >
             <span className="brand-mark">
               m<span>c</span>
@@ -112,28 +123,28 @@ export default function Home() {
             </span>
             <span className="brand-description">
               MAHMUT CAN ÇÖNGER
-              <small>{tr ? "KİŞİSEL PORTFOLYO" : "PERSONAL PORTFOLIO"}</small>
+              <small>{t("common.personal_portfolio")}</small>
             </span>
           </button>
           <div className="header-right">
             <span className="header-location">
-              <MapPin size={13} /> Manisa, Türkiye
+              <MapPin size={13} /> {profile.location}
             </span>
             <button
               className="language-button"
-              onClick={() => i18n.changeLanguage(tr ? "en" : "tr")}
-              aria-label={tr ? "İngilizceye geç" : "Switch to Turkish"}
+              onClick={() => i18n.changeLanguage(language === "tr" ? "en" : "tr")}
+              aria-label={t("common.switch_language")}
             >
               <Globe2 size={14} />
-              <span className={tr ? "selected" : ""}>TR</span>
+              <span className={language === "tr" ? "selected" : ""}>TR</span>
               <span className="language-divider">/</span>
-              <span className={!tr ? "selected" : ""}>EN</span>
+              <span className={language === "en" ? "selected" : ""}>EN</span>
             </button>
             <button
               className="header-contact"
               onClick={() => selectSection("contact")}
             >
-              {tr ? "Birlikte üretelim" : "Let’s create"}
+              {t("common.lets_create")}
               <ArrowUpRight size={15} />
             </button>
           </div>
@@ -191,11 +202,11 @@ export default function Home() {
                 </span>
                 <span className="card-breadcrumb">
                   mahmutcanconger<span>/</span>
-                  {t(`nav.${active}`).toLocaleLowerCase(tr ? "tr" : "en")}
+                  {t(`nav.${active}`).toLocaleLowerCase(language)}
                 </span>
                 <span className="card-page">
-                  0{index + 1}
-                  <span> / 06</span>
+                  {sectionNumber(active)}
+                  <span> / {sectionTotal}</span>
                 </span>
               </div>
               <div className="card-scroll">
@@ -203,6 +214,7 @@ export default function Home() {
                   {active === "home" && <HomeCard navigate={selectSection} />}
                   {active === "about" && <AboutCard />}
                   {active === "tech" && <SkillsCard />}
+                  {active === "experience" && <ExperienceSection />}
                   {active === "projects" && <ProjectsCard />}
                   {active === "articles" && <ArticlesCard />}
                   {active === "contact" && <Contact />}
@@ -213,7 +225,7 @@ export default function Home() {
           </AnimatePresence>
         </main>
         <footer className="site-footer">
-          <span>© {new Date().getFullYear()} Mahmut Can Çönger</span>
+          <span>© {new Date().getFullYear()} {profile.name}</span>
         </footer>
         <Dock active={active} onSelect={selectSection} />
       </div>
