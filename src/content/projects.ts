@@ -381,8 +381,8 @@ export const projects: Project[] = [
       en: "School project · source code on GitHub",
     },
     summary: {
-      tr: "4 kişilik ekiple geliştirilen İngilizce kelime öğrenme uygulaması. Depo sahibi olarak ekip üyelerinden gelen 20 PR'ı inceleyip birleştirdim.",
-      en: "An English vocabulary app built by a team of four. As the repository owner, I reviewed and merged 20 pull requests from team members.",
+      tr: "4 kişilik ekiple geliştirilen İngilizce kelime öğrenme uygulaması. Depo sahibi olarak projenin mimari zeminini hazırladı; ekipten gelen 20 PR'ı inceleyip birleştirdi.",
+      en: "An English vocabulary app built by a team of four. As repository owner, laid the project's architectural foundation and reviewed and merged 20 pull requests from the team.",
     },
     story: {
       tr: [
@@ -396,12 +396,12 @@ export const projects: Project[] = [
     },
     highlights: {
       tr: [
-        "Depo sahibi: ekip üyelerinden gelen 20 PR'ı inceleyip birleştirdim",
+        "Depo sahibi: mimari zemin, ekipten gelen 20 PR'ın incelenip birleştirilmesi",
         "6 aşamalı, 1–180 günlük aralıklı tekrar algoritması",
         "OpenRouter (Mistral 7B) ile hikâye üretimi",
       ],
       en: [
-        "Repository owner: reviewed and merged 20 pull requests from team members",
+        "Repository owner: architectural foundation, reviewed and merged 20 pull requests from the team",
         "6-stage spaced repetition with 1–180 day intervals",
         "Story generation with OpenRouter (Mistral 7B)",
       ],

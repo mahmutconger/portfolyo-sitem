@@ -99,6 +99,55 @@ describe("içerik modeli: projeler", () => {
     );
   });
 
+  it("Penlingu açıklamasında mimari zemin ve 20 PR var", () => {
+    const penlingu = projects.find((project) => project.id === "penlingu");
+    expect(penlingu?.summary.tr).toContain(
+      "Depo sahibi olarak projenin mimari zeminini hazırladı; ekipten gelen 20 PR'ı inceleyip birleştirdi.",
+    );
+    expect(penlingu?.summary.en).toContain(
+      "As repository owner, laid the project's architectural foundation and reviewed and merged 20 pull requests from the team.",
+    );
+    expect(penlingu?.kind).toBe("school");
+    expect(penlingu?.period).toEqual({ start: "2025-04", end: "2025-06" });
+    expect(penlingu?.links).toContainEqual({
+      kind: "source",
+      url: "https://github.com/mahmutconger/EnglishWordApp",
+    });
+  });
+
+  it("Memories Book adı yalnızca 'eski adı' notunda geçer", () => {
+    const timofy = projects.find((project) => project.id === "timofy");
+    expect(timofy?.title).toEqual({ tr: "Timofy", en: "Timofy" });
+    expect(timofy?.tagline.tr).toContain("eski adı Memories Book");
+  });
+
+  it("müşteri işlerinde kaynak kod bağlantısı yok", () => {
+    const clientSource = projects
+      .filter((project) => project.kind === "client")
+      .flatMap((project) => project.links.filter((link) => link.kind === "source"));
+    expect(clientSource).toEqual([]);
+  });
+
+  it("boş başlık, eksik tarih ve yanlış bağlantı etiketini yakalar", () => {
+    const broken: Project = {
+      ...projects[0],
+      id: "bozuk",
+      title: { tr: "", en: "Broken" },
+      period: { start: "2026-09", end: "2026-01" },
+      links: [{ kind: "source", url: "https://play.google.com/store/apps/details?id=x" }],
+    };
+    const messages = validateProjects([broken]).map((issue) => issue.path);
+    expect(messages).toEqual(
+      expect.arrayContaining([
+        "projects[0](bozuk).title.tr",
+        "projects[0](bozuk).period",
+        "projects[0](bozuk).links[0]",
+      ]),
+    );
+    expect(
+      validatePeriod(undefined as unknown as Project["period"], "p"),
+    ).toHaveLength(1);
+  });
 });
 
 describe("bağlantı etiketi ↔ hedef", () => {
