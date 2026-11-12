@@ -3,12 +3,22 @@
     {
       "source": "/Mahmut_Can_CONGER_CV.pdf",
       "destination": "/cv/Mahmut_Can_Conger_CV_Mobil.pdf",
-      "permanent": false
+      "statusCode": 301
     },
     {
       "source": "/CV_TR.pdf",
       "destination": "/cv/Mahmut_Can_Conger_CV_Mobil.pdf",
-      "permanent": false
+      "statusCode": 301
+    }
+  ],
+  "headers": [
+    {
+      "source": "/cv/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    },
+    {
+      "source": "/Mahmut_Can_CONGER_CV.pdf",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     }
   ],
   "rewrites": [

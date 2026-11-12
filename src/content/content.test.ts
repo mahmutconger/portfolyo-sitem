@@ -216,15 +216,33 @@ describe("CV dosyaları", () => {
     expect(defaultCv.variant).toBe("mobile");
   });
 
-  it("eski CV adresleri vercel.json'da mobil CV'ye yönleniyor", () => {
-    const config = JSON.parse(
-      readFileSync(resolve(__dirname, "../../vercel.json"), "utf8"),
-    ) as { redirects: { source: string; destination: string }[] };
+  const vercel = JSON.parse(
+    readFileSync(resolve(__dirname, "../../vercel.json"), "utf8"),
+  ) as {
+    redirects: { source: string; destination: string; statusCode?: number }[];
+    headers: { source: string; headers: { key: string; value: string }[] }[];
+  };
+
+  it("eski CV adresleri vercel.json'da 301 ile mobil CV'ye yönleniyor", () => {
     legacyCvPaths.forEach((path) => {
-      expect(config.redirects).toContainEqual(
-        expect.objectContaining({ source: path, destination: defaultCv.href }),
+      expect(vercel.redirects).toContainEqual(
+        expect.objectContaining({ source: path, destination: defaultCv.href, statusCode: 301 }),
       );
     });
+  });
+
+  it("CV'ler ve eski CV adresi için önbellek kapalı (no-cache)", () => {
+    const noCache = (path: string) =>
+      vercel.headers.some(
+        (rule) =>
+          new RegExp(`^${rule.source}$`).test(path) &&
+          rule.headers.some(
+            (header) => header.key === "Cache-Control" && header.value === "no-cache",
+          ),
+      );
+    cvDocuments.forEach((cv) => expect(noCache(cv.href), cv.href).toBe(true));
+    expect(noCache("/Mahmut_Can_CONGER_CV.pdf")).toBe(true);
+    expect(noCache("/")).toBe(false);
   });
 });
 
