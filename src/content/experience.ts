@@ -34,6 +34,6 @@ export const experience: ExperienceEntry[] = [
       en: "Client projects, remote",
     },
     bullets: { tr: [], en: [] },
-    projectIds: ["walktalk", "mook", "delivery-tracking"],
+    projectIds: ["walktalk", "mook"],
   },
 ];

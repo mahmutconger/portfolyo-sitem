@@ -18,6 +18,7 @@ export interface Period {
 
 export type ProjectKind =
   | "client"
+  | "independent"
   | "personal"
   | "thesis"
   | "school"
@@ -41,6 +42,8 @@ export interface Project {
   /** Görsellerin okunduğu Firestore `projects` belgesinin kimliği. */
   firestoreId?: string;
   kind: ProjectKind;
+  /** Yalnızca müşteri işlerinde (`kind: "client"`) bulunur; diğerlerinde yoktur. */
+  client?: string;
   period: Period;
   title: Localized;
   /** Başlığın altındaki tek satırlık açıklama. */

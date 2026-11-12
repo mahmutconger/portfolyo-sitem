@@ -17,6 +17,7 @@ export const bannedPhrases = [
   "production-ready",
   "kurumsal seviye",
   "tamamen dijitalleştiren",
+  "enterprise-grade",
   "atomic commit",
   "(advanced)",
   "ileri seviye",
@@ -94,6 +95,11 @@ export function validateProjects(list: Project[]): ValidationIssue[] {
     }
     issues.push(...validatePeriod(project.period, `${path}.period`));
     if (!project.tags.length) issues.push({ path: `${path}.tags`, message: "Etiket yok" });
+    // Müşteri adı yalnızca müşteri işlerinde olabilir ve orada zorunludur.
+    if (project.kind === "client" && !project.client?.trim())
+      issues.push({ path: `${path}.client`, message: "Müşteri işinde müşteri adı zorunlu" });
+    if (project.kind !== "client" && project.client !== undefined)
+      issues.push({ path: `${path}.client`, message: "Müşteri işi olmayan projede müşteri alanı olamaz" });
     project.links.forEach((link, i) => {
       if (!linkMatchesTarget(link))
         issues.push({

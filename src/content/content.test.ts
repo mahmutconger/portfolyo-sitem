@@ -55,12 +55,64 @@ describe("içerik modeli: projeler", () => {
     expect(projects.map((project) => project.id)).toEqual([
       "walktalk",
       "mook",
-      "delivery-tracking",
       "timofy",
       "smartexam",
+      "delivery-tracking",
       "latteproje",
       "penlingu",
     ]);
+  });
+
+  it("Delivery Tracking bağımsız proje ve müşteri alanı yok", () => {
+    const delivery = projects.find((project) => project.id === "delivery-tracking");
+    expect(delivery?.kind).toBe("independent");
+    expect(delivery).not.toHaveProperty("client");
+    expect(tr.projects.kind.independent).toBe("Bağımsız proje");
+    expect(en.projects.kind.independent).toBe("Independent project");
+  });
+
+  it("Delivery Tracking metinlerinde müşteri/client/customer geçmiyor", () => {
+    const delivery = projects.find((project) => project.id === "delivery-tracking");
+    const text = JSON.stringify(delivery).toLocaleLowerCase("tr");
+    for (const word of ["müşteri", "client", "customer"]) expect(text).not.toContain(word);
+  });
+
+  it("müşteri adı yalnızca müşteri işlerinde var", () => {
+    const withClient = projects
+      .filter((project) => project.client)
+      .map((project) => [project.id, project.kind, project.client]);
+    expect(withClient).toEqual([
+      ["walktalk", "client", "Samet Yanan"],
+      ["mook", "client", "Samet Yanan"],
+    ]);
+  });
+
+  it("müşteri alanı kuralını uygular", () => {
+    const [walktalk] = projects;
+    const noClient: Project = { ...walktalk, id: "a", client: undefined };
+    const strayClient: Project = { ...walktalk, id: "b", kind: "independent" };
+    expect(validateProjects([noClient]).map((issue) => issue.path)).toContain(
+      "projects[0](a).client",
+    );
+    expect(validateProjects([strayClient]).map((issue) => issue.path)).toContain(
+      "projects[0](b).client",
+    );
+  });
+
+  it("Penlingu açıklamasında mimari zemin ve 20 PR var", () => {
+    const penlingu = projects.find((project) => project.id === "penlingu");
+    expect(penlingu?.summary.tr).toContain(
+      "Depo sahibi olarak projenin mimari zeminini hazırladı; ekipten gelen 20 PR'ı inceleyip birleştirdi.",
+    );
+    expect(penlingu?.summary.en).toContain(
+      "As repository owner, laid the project's architectural foundation and reviewed and merged 20 pull requests from the team.",
+    );
+    expect(penlingu?.kind).toBe("school");
+    expect(penlingu?.period).toEqual({ start: "2025-04", end: "2025-06" });
+    expect(penlingu?.links).toContainEqual({
+      kind: "source",
+      url: "https://github.com/mahmutconger/EnglishWordApp",
+    });
   });
 
   it("Memories Book adı yalnızca 'eski adı' notunda geçer", () => {
@@ -122,6 +174,13 @@ describe("deneyim", () => {
     );
   });
 
+  it("freelance bloğunda yalnızca WalkTalk ve MOOK var, tarih Mart – Kasım 2026", () => {
+    const freelance = experience.find((entry) => entry.id === "freelance");
+    expect(freelance?.projectIds).toEqual(["walktalk", "mook"]);
+    expect(freelance && formatPeriod(freelance.period, "tr")).toBe("Mart – Kasım 2026");
+    expect(freelance && formatPeriod(freelance.period, "en")).toBe("March – November 2026");
+  });
+
   it("freelance altındaki projeler proje listesinde var", () => {
     const ids = new Set(projects.map((project) => project.id));
     const missing = experience.flatMap((entry) =>
@@ -157,15 +216,33 @@ describe("CV dosyaları", () => {
     expect(defaultCv.variant).toBe("mobile");
   });
 
-  it("eski CV adresleri vercel.json'da mobil CV'ye yönleniyor", () => {
-    const config = JSON.parse(
-      readFileSync(resolve(__dirname, "../../vercel.json"), "utf8"),
-    ) as { redirects: { source: string; destination: string }[] };
+  const vercel = JSON.parse(
+    readFileSync(resolve(__dirname, "../../vercel.json"), "utf8"),
+  ) as {
+    redirects: { source: string; destination: string; statusCode?: number }[];
+    headers: { source: string; headers: { key: string; value: string }[] }[];
+  };
+
+  it("eski CV adresleri vercel.json'da 301 ile mobil CV'ye yönleniyor", () => {
     legacyCvPaths.forEach((path) => {
-      expect(config.redirects).toContainEqual(
-        expect.objectContaining({ source: path, destination: defaultCv.href }),
+      expect(vercel.redirects).toContainEqual(
+        expect.objectContaining({ source: path, destination: defaultCv.href, statusCode: 301 }),
       );
     });
+  });
+
+  it("CV'ler ve eski CV adresi için önbellek kapalı (no-cache)", () => {
+    const noCache = (path: string) =>
+      vercel.headers.some(
+        (rule) =>
+          new RegExp(`^${rule.source}$`).test(path) &&
+          rule.headers.some(
+            (header) => header.key === "Cache-Control" && header.value === "no-cache",
+          ),
+      );
+    cvDocuments.forEach((cv) => expect(noCache(cv.href), cv.href).toBe(true));
+    expect(noCache("/Mahmut_Can_CONGER_CV.pdf")).toBe(true);
+    expect(noCache("/")).toBe(false);
   });
 });
 

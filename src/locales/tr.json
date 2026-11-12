@@ -56,7 +56,8 @@
     "title_b": "gerçek kullanıcılar.",
     "description": "Şirket stajım ve freelance olarak yürüttüğüm müşteri projeleri.",
     "projects_label": "Bu dönemdeki projeler",
-    "view_project": "Proje kartını aç"
+    "view_project": "Proje kartını aç",
+    "client": "Müşteri: {{name}}"
   },
   "projects": {
     "eyebrow": "SEÇİLMİŞ ÇALIŞMALAR",
@@ -79,6 +80,7 @@
     "image_fallback": "{{title}} için görsel şu anda yüklenemiyor",
     "kind": {
       "client": "Müşteri işi",
+      "independent": "Bağımsız proje",
       "personal": "Kişisel ürün",
       "thesis": "Bitirme tezi",
       "school": "Okul projesi",

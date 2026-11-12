@@ -121,6 +121,7 @@ test("CV menüsü üç PDF sunuyor ve hepsi 200 + application/pdf", async ({ pag
     const response = await request.get(href!);
     expect(response.status(), href!).toBe(200);
     expect(response.headers()["content-type"]).toContain("application/pdf");
+    expect(response.headers()["cache-control"]).toBe("no-cache");
   }
 
   await openSection(page, "contact");
@@ -128,10 +129,10 @@ test("CV menüsü üç PDF sunuyor ve hepsi 200 + application/pdf", async ({ pag
   await expect(page.getByRole("menuitem")).toHaveCount(3);
 });
 
-test("eski CV adresleri mobil CV'ye yönleniyor", async ({ request }) => {
+test("eski CV adresleri 301 ile mobil CV'ye yönleniyor", async ({ request }) => {
   for (const path of legacyCvPaths) {
     const redirect = await request.get(path, { maxRedirects: 0 });
-    expect(redirect.status()).toBe(307);
+    expect(redirect.status()).toBe(301);
     expect(redirect.headers().location).toBe("/cv/Mahmut_Can_Conger_CV_Mobil.pdf");
     const response = await request.get(path);
     expect(response.status()).toBe(200);
@@ -180,12 +181,64 @@ test("proje kartlarında tür, tarih ve durum var; İngilizcede başlıklar çev
     await expect(tile.locator(".project-status")).toContainText(project.status.tr);
   }
   await expect(page.getByTestId("project-tile-timofy")).toContainText("Timofy");
+  await expect(page.getByTestId("project-tile-delivery-tracking")).toContainText("Bağımsız proje");
   await expect(page.locator("body")).not.toContainText("Memories Book:");
 
   await page.getByRole("button", { name: "İngilizceye geç" }).click();
   await expect(page.getByTestId("project-tile-walktalk")).toContainText("Client project");
   await expect(page.getByTestId("project-tile-walktalk")).toContainText("Real-time voice translation");
   await expect(page.getByTestId("project-tile-smartexam")).toContainText("Graduation thesis");
+  await expect(page.getByTestId("project-tile-delivery-tracking")).toContainText(
+    "Independent project",
+  );
+});
+
+test("Delivery kartında ve ayrıntısında müşteri/client/customer geçmiyor", async ({ page }) => {
+  const forbidden = /müşteri|client|customer/i;
+  for (const language of ["tr", "en"] as const) {
+    await page.addInitScript((lang) => localStorage.setItem("appLang", lang), language);
+    await openSection(page, "projects");
+    await page.getByRole("button", { name: /Tüm Projeleri Görüntüle|View All Projects/ }).click();
+    const tile = page.getByTestId("project-tile-delivery-tracking");
+    await expect(tile).toBeVisible();
+    // Görünen metin, alt metinleri ve aria etiketleri birlikte denetlenir.
+    const tileText = await tile.evaluate((element) =>
+      [
+        element.textContent,
+        ...Array.from(element.querySelectorAll("[alt],[aria-label],[title]")).flatMap((node) => [
+          node.getAttribute("alt"),
+          node.getAttribute("aria-label"),
+          node.getAttribute("title"),
+        ]),
+      ].join(" "),
+    );
+    expect(tileText).not.toMatch(forbidden);
+
+    await page.goto("/?project=delivery-tracking#projects");
+    const detail = page.getByTestId("project-detail-delivery-tracking");
+    await expect(detail).toBeVisible();
+    await expect(detail).toContainText(language === "tr" ? "Bağımsız proje" : "Independent project");
+    const detailText = await detail.evaluate((element) =>
+      [
+        element.textContent,
+        ...Array.from(element.querySelectorAll("[alt],[aria-label],[title]")).flatMap((node) => [
+          node.getAttribute("alt"),
+          node.getAttribute("aria-label"),
+          node.getAttribute("title"),
+        ]),
+      ].join(" "),
+    );
+    expect(detailText).not.toMatch(forbidden);
+  }
+});
+
+test("freelance bloğunda Delivery yok, WalkTalk ve MOOK var", async ({ page }) => {
+  await openSection(page, "experience");
+  const freelance = page.getByTestId("experience-freelance");
+  await expect(freelance.getByRole("link")).toHaveCount(2);
+  await expect(freelance).not.toContainText(/Delivery/i);
+  await expect(freelance).toContainText("WalkTalk");
+  await expect(freelance).toContainText("MOOK");
 });
 
 test("LinkedIn bağlantıları yeni adresi kullanıyor", async ({ page }) => {

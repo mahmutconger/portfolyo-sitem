@@ -95,6 +95,8 @@ export default function ExperienceCard({
                             <small>
                               {formatPeriod(project.period, language)} ·{" "}
                               {project.tagline[language]}
+                              {project.client &&
+                                ` · ${t("experience.client", { name: project.client })}`}
                             </small>
                           </span>
                           <ArrowUpRight size={16} />

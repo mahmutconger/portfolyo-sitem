@@ -7,6 +7,7 @@ export const projects: Project[] = [
     id: "walktalk",
     firestoreId: "01F3ZvY8UrV0AtSodXGy",
     kind: "client",
+    client: "Samet Yanan",
     period: { start: "2026-04", end: "2026-07" },
     title: { tr: "WalkTalk", en: "WalkTalk" },
     tagline: {
@@ -69,6 +70,7 @@ export const projects: Project[] = [
     id: "mook",
     firestoreId: "AUAA3FDsigzkLXAyFaNY",
     kind: "client",
+    client: "Samet Yanan",
     period: { start: "2026-07", end: "2026-10" },
     title: { tr: "MOOK", en: "MOOK" },
     tagline: {
@@ -119,63 +121,6 @@ export const projects: Project[] = [
       "Cloud Functions (TypeScript)",
     ],
     links: [{ kind: "website", url: "https://mookswipe.com" }],
-  },
-  {
-    id: "delivery-tracking",
-    firestoreId: "hWTlzHf7vtA3LbJhZPlf",
-    kind: "client",
-    period: { start: "2026-03", end: "2026-05" },
-    title: {
-      tr: "Delivery Tracking & Ops Console",
-      en: "Delivery Tracking & Ops Console",
-    },
-    tagline: {
-      tr: "Kurye operasyonu için saha uygulaması ve yönetim paneli",
-      en: "Field app and operations console for courier operations",
-    },
-    status: {
-      tr: "Müşteri işi · uygulama ve panel tek başına geliştirildi",
-      en: "Client project · app and console built solo",
-    },
-    summary: {
-      tr: "Bir müşterinin kurye operasyonu için tek başına geliştirilen Android kurye uygulaması ve Next.js/TypeScript yönetim paneli.",
-      en: "An Android courier app and a Next.js/TypeScript operations console, built solo for a client's courier operation.",
-    },
-    story: {
-      tr: [
-        "Kurye uygulaması Jetpack Compose ve XML Views ile yazıldı. İşlemler WorkManager kuyruğuna alınan offline-first bir yapıda tutuluyor; konum takibi arka planda sürüyor.",
-        "Next.js/TypeScript panelinde Mapbox ile canlı harita, sürücü ve rota yönetimi, teslimat kanıtı ve Twilio ile gönderilen bildirimler bulunuyor.",
-      ],
-      en: [
-        "The courier app is built with Jetpack Compose and XML Views. Actions are kept in an offline-first structure queued with WorkManager, and location tracking runs in the background.",
-        "The Next.js/TypeScript console provides a live Mapbox map, driver and route management, proof of delivery and notifications sent through Twilio.",
-      ],
-    },
-    highlights: {
-      tr: [
-        "WorkManager kuyruklu offline-first kurye uygulaması",
-        "Arka plan konum takibi",
-        "Mapbox canlı harita, sürücü/rota yönetimi ve teslimat kanıtı",
-        "Twilio bildirimleri",
-      ],
-      en: [
-        "Offline-first courier app with a WorkManager queue",
-        "Background location tracking",
-        "Live Mapbox map, driver/route management and proof of delivery",
-        "Twilio notifications",
-      ],
-    },
-    tags: [
-      "Kotlin",
-      "Jetpack Compose",
-      "XML Views",
-      "WorkManager",
-      "Next.js",
-      "TypeScript",
-      "Mapbox",
-      "Twilio",
-    ],
-    links: [],
   },
   {
     id: "timofy",
@@ -304,6 +249,63 @@ export const projects: Project[] = [
     links: [],
   },
   {
+    id: "delivery-tracking",
+    firestoreId: "hWTlzHf7vtA3LbJhZPlf",
+    kind: "independent",
+    period: { start: "2026-03", end: "2026-05" },
+    title: {
+      tr: "Delivery Tracking & Ops Console",
+      en: "Delivery Tracking & Ops Console",
+    },
+    tagline: {
+      tr: "Kurye operasyonu için saha uygulaması ve yönetim paneli",
+      en: "Field app and operations console for courier operations",
+    },
+    status: {
+      tr: "Tek başına geliştirildi · Android uygulaması ve Next.js paneli",
+      en: "Built solo · Android app and Next.js console",
+    },
+    summary: {
+      tr: "Kurye operasyonları için tek başına geliştirilen offline-first Android kurye uygulaması ve Next.js/TypeScript yönetim paneli.",
+      en: "An offline-first Android courier app and a Next.js/TypeScript operations console for courier operations, built solo.",
+    },
+    story: {
+      tr: [
+        "Kurye uygulaması Jetpack Compose ve XML Views ile yazıldı. İşlemler WorkManager kuyruğuna alınan offline-first bir yapıda tutuluyor; konum takibi arka planda sürüyor.",
+        "Next.js/TypeScript panelinde Mapbox ile canlı harita, sürücü ve rota yönetimi, teslimat kanıtı ve Twilio ile gönderilen bildirimler bulunuyor.",
+      ],
+      en: [
+        "The courier app is built with Jetpack Compose and XML Views. Actions are kept in an offline-first structure queued with WorkManager, and location tracking runs in the background.",
+        "The Next.js/TypeScript console provides a live Mapbox map, driver and route management, proof of delivery and notifications sent through Twilio.",
+      ],
+    },
+    highlights: {
+      tr: [
+        "WorkManager kuyruklu offline-first kurye uygulaması",
+        "Arka plan konum takibi",
+        "Mapbox canlı harita, sürücü/rota yönetimi ve teslimat kanıtı",
+        "Twilio bildirimleri",
+      ],
+      en: [
+        "Offline-first courier app with a WorkManager queue",
+        "Background location tracking",
+        "Live Mapbox map, driver/route management and proof of delivery",
+        "Twilio notifications",
+      ],
+    },
+    tags: [
+      "Kotlin",
+      "Jetpack Compose",
+      "XML Views",
+      "WorkManager",
+      "Next.js",
+      "TypeScript",
+      "Mapbox",
+      "Twilio",
+    ],
+    links: [],
+  },
+  {
     id: "latteproje",
     firestoreId: "vkxqvIDSvZygNgl1iDvz",
     kind: "hackathon",
@@ -379,8 +381,8 @@ export const projects: Project[] = [
       en: "School project · source code on GitHub",
     },
     summary: {
-      tr: "4 kişilik ekiple geliştirilen İngilizce kelime öğrenme uygulaması. Depo sahibi olarak ekip üyelerinden gelen 20 PR'ı inceleyip birleştirdim.",
-      en: "An English vocabulary app built by a team of four. As the repository owner, I reviewed and merged 20 pull requests from team members.",
+      tr: "4 kişilik ekiple geliştirilen İngilizce kelime öğrenme uygulaması. Depo sahibi olarak projenin mimari zeminini hazırladı; ekipten gelen 20 PR'ı inceleyip birleştirdi.",
+      en: "An English vocabulary app built by a team of four. As repository owner, laid the project's architectural foundation and reviewed and merged 20 pull requests from the team.",
     },
     story: {
       tr: [
@@ -394,12 +396,12 @@ export const projects: Project[] = [
     },
     highlights: {
       tr: [
-        "Depo sahibi: ekip üyelerinden gelen 20 PR'ı inceleyip birleştirdim",
+        "Depo sahibi: mimari zemin, ekipten gelen 20 PR'ın incelenip birleştirilmesi",
         "6 aşamalı, 1–180 günlük aralıklı tekrar algoritması",
         "OpenRouter (Mistral 7B) ile hikâye üretimi",
       ],
       en: [
-        "Repository owner: reviewed and merged 20 pull requests from team members",
+        "Repository owner: architectural foundation, reviewed and merged 20 pull requests from the team",
         "6-stage spaced repetition with 1–180 day intervals",
         "Story generation with OpenRouter (Mistral 7B)",
       ],
