@@ -15,8 +15,8 @@ export const profile = {
     en: "Available for a long-term internship (Feb–Jun 2027) · Graduating June 2027",
   },
   heroDescription: {
-    tr: "Kotlin, Jetpack Compose ve Kotlin Multiplatform ile Android ve iOS uygulamaları geliştiriyorum. Offline-first veri katmanları, gerçek zamanlı ses akışları ve test edilebilir mimari üzerine çalışıyorum.",
-    en: "I build Android and iOS apps with Kotlin, Jetpack Compose and Kotlin Multiplatform. I work on offline-first data layers, real-time audio pipelines and testable architecture.",
+    tr: "Mobil uygulama geliştirmeye odaklanan Yazılım Mühendisliği öğrencisi. Kotlin, Compose ve KMP ile Android ve iOS uygulamaları, Firebase ve Cloud Functions ile arka uçlarını geliştirdi.",
+    en: "Software Engineering student focused on mobile development. Built Android and iOS apps with Kotlin, Compose and KMP, and their back ends with Firebase and Cloud Functions.",
   },
   metaDescription: {
     tr: "Kotlin, Jetpack Compose ve Kotlin Multiplatform ile Android ve iOS uygulamaları geliştiren Yazılım Mühendisliği öğrencisi.",
