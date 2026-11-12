@@ -56,7 +56,8 @@
     "title_b": "real users.",
     "description": "My company internship and the client projects I deliver as a freelancer.",
     "projects_label": "Projects in this period",
-    "view_project": "Open project card"
+    "view_project": "Open project card",
+    "client": "Client: {{name}}"
   },
   "projects": {
     "eyebrow": "SELECTED WORK",
@@ -79,6 +80,7 @@
     "image_fallback": "The image for {{title}} can’t be loaded right now",
     "kind": {
       "client": "Client project",
+      "independent": "Independent project",
       "personal": "Personal product",
       "thesis": "Graduation thesis",
       "school": "School project",

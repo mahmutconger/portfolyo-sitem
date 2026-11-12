@@ -55,47 +55,50 @@ describe("içerik modeli: projeler", () => {
     expect(projects.map((project) => project.id)).toEqual([
       "walktalk",
       "mook",
-      "delivery-tracking",
       "timofy",
       "smartexam",
+      "delivery-tracking",
       "latteproje",
       "penlingu",
     ]);
   });
 
-  it("Memories Book adı yalnızca 'eski adı' notunda geçer", () => {
-    const timofy = projects.find((project) => project.id === "timofy");
-    expect(timofy?.title).toEqual({ tr: "Timofy", en: "Timofy" });
-    expect(timofy?.tagline.tr).toContain("eski adı Memories Book");
+  it("Delivery Tracking bağımsız proje ve müşteri alanı yok", () => {
+    const delivery = projects.find((project) => project.id === "delivery-tracking");
+    expect(delivery?.kind).toBe("independent");
+    expect(delivery).not.toHaveProperty("client");
+    expect(tr.projects.kind.independent).toBe("Bağımsız proje");
+    expect(en.projects.kind.independent).toBe("Independent project");
   });
 
-  it("müşteri işlerinde kaynak kod bağlantısı yok", () => {
-    const clientSource = projects
-      .filter((project) => project.kind === "client")
-      .flatMap((project) => project.links.filter((link) => link.kind === "source"));
-    expect(clientSource).toEqual([]);
+  it("Delivery Tracking metinlerinde müşteri/client/customer geçmiyor", () => {
+    const delivery = projects.find((project) => project.id === "delivery-tracking");
+    const text = JSON.stringify(delivery).toLocaleLowerCase("tr");
+    for (const word of ["müşteri", "client", "customer"]) expect(text).not.toContain(word);
   });
 
-  it("boş başlık, eksik tarih ve yanlış bağlantı etiketini yakalar", () => {
-    const broken: Project = {
-      ...projects[0],
-      id: "bozuk",
-      title: { tr: "", en: "Broken" },
-      period: { start: "2026-09", end: "2026-01" },
-      links: [{ kind: "source", url: "https://play.google.com/store/apps/details?id=x" }],
-    };
-    const messages = validateProjects([broken]).map((issue) => issue.path);
-    expect(messages).toEqual(
-      expect.arrayContaining([
-        "projects[0](bozuk).title.tr",
-        "projects[0](bozuk).period",
-        "projects[0](bozuk).links[0]",
-      ]),
+  it("müşteri adı yalnızca müşteri işlerinde var", () => {
+    const withClient = projects
+      .filter((project) => project.client)
+      .map((project) => [project.id, project.kind, project.client]);
+    expect(withClient).toEqual([
+      ["walktalk", "client", "Samet Yanan"],
+      ["mook", "client", "Samet Yanan"],
+    ]);
+  });
+
+  it("müşteri alanı kuralını uygular", () => {
+    const [walktalk] = projects;
+    const noClient: Project = { ...walktalk, id: "a", client: undefined };
+    const strayClient: Project = { ...walktalk, id: "b", kind: "independent" };
+    expect(validateProjects([noClient]).map((issue) => issue.path)).toContain(
+      "projects[0](a).client",
     );
-    expect(
-      validatePeriod(undefined as unknown as Project["period"], "p"),
-    ).toHaveLength(1);
+    expect(validateProjects([strayClient]).map((issue) => issue.path)).toContain(
+      "projects[0](b).client",
+    );
   });
+
 });
 
 describe("bağlantı etiketi ↔ hedef", () => {
@@ -120,6 +123,13 @@ describe("deneyim", () => {
     experience.forEach((entry) =>
       expect(validatePeriod(entry.period, entry.id)).toEqual([]),
     );
+  });
+
+  it("freelance bloğunda yalnızca WalkTalk ve MOOK var, tarih Mart – Kasım 2026", () => {
+    const freelance = experience.find((entry) => entry.id === "freelance");
+    expect(freelance?.projectIds).toEqual(["walktalk", "mook"]);
+    expect(freelance && formatPeriod(freelance.period, "tr")).toBe("Mart – Kasım 2026");
+    expect(freelance && formatPeriod(freelance.period, "en")).toBe("March – November 2026");
   });
 
   it("freelance altındaki projeler proje listesinde var", () => {

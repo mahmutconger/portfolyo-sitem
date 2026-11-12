@@ -27,7 +27,7 @@ describe("ExperienceCard", () => {
     expect(znosoft).toHaveTextContent("Altınım Sahte mi?");
   });
 
-  it("freelance bloğunu üç müşteri projesine bağlar", () => {
+  it("freelance bloğunu yalnızca iki müşteri projesine bağlar", () => {
     renderCard();
     const freelance = screen.getByTestId("experience-freelance");
     expect(freelance).toHaveTextContent("Freelance Mobil Geliştirici");
@@ -37,9 +37,10 @@ describe("ExperienceCard", () => {
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/?project=walktalk#projects",
       "/?project=mook#projects",
-      "/?project=delivery-tracking#projects",
     ]);
     expect(links[0]).toHaveAccessibleName(/WalkTalk/);
+    expect(freelance).not.toHaveTextContent(/Delivery/i);
+    expect(within(freelance).getAllByText(/Müşteri: Samet Yanan/)).toHaveLength(2);
   });
 
   it("İngilizce içerikle de çalışır", async () => {
